@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Tuition O Job Media</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Baloo+Da+2:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --bg:#FBF7EF;
+    --surface:#FFFFFF;
+    --ink:#2A2420;
+    --ink-soft:#6B6155;
+    --teal:#2F6F62;
+    --teal-deep:#1C4A3E;
+    --gold:#CB8A2E;
+    --gold-soft:#F4E6C4;
+    --terracotta:#C2643E;
+    --line:#EAE2D0;
+    --radius:18px;
+    --shadow:0 10px 32px rgba(42,36,32,0.08);
+    --shadow-soft:0 3px 14px rgba(42,36,32,0.05);
+    --shadow-lift:0 14px 34px rgba(28,74,62,0.16);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Hind Siliguri',sans-serif;
+    font-size:16.5px;
+    line-height:1.68;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Baloo Da 2',sans-serif;
+    color:var(--teal-deep);
+    margin:0;
+    letter-spacing:0.005em;
+  }
+  img{max-width:100%;display:block;}
+  button{font-family:inherit;cursor:pointer;}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+
+  /* ---------- Header ---------- */
+  header.site{
+    padding:44px 20px 34px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 12% 15%, rgba(47,111,98,0.10), transparent 48%),
+      radial-gradient(circle at 88% 25%, rgba(203,138,46,0.14), transparent 46%),
+      radial-gradient(circle at 50% 100%, rgba(194,100,62,0.06), transparent 50%),
+      linear-gradient(180deg, #FDFBF6 0%, var(--bg) 100%);
+    border-bottom:1px solid var(--line);
+  }
+  .brand-mark{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:'Baloo Da 2',sans-serif;
+    font-size:14px;letter-spacing:0.16em;
+    color:var(--teal);
+    text-transform:uppercase;
+    margin-bottom:16px;
+    font-weight:700;
+  }
+  .brand-mark::before,.brand-mark::after{
+    content:"";width:22px;height:2px;background:var(--gold);border-radius:2px;
+  }
+  header.site h1{
+    font-size:clamp(30px,6.6vw,48px);
+    font-weight:800;
+    letter-spacing:0.005em;
+  }
+  header.site p.tagline{
+    margin-top:12px;
+    font-size:clamp(16.5px,3.4vw,20px);
+    color:var(--ink-soft);
+    font-weight:500;
+  }
+  .trust-row{
+    display:flex;align-items:center;justify-content:center;gap:16px;
+    flex-wrap:wrap;margin-top:20px;
+  }
+  .trust-chip{
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--surface);border:1px solid var(--line);
+    padding:7px 14px 7px 10px;border-radius:999px;
+    font-size:12.5px;font-weight:600;color:var(--teal-deep);
+    box-shadow:var(--shadow-soft);
+  }
+  .trust-chip .dot{
+    width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;
+  }
+
+  .account-bar{
+    max-width:640px;margin:16px auto 0;padding:0 18px;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+  }
+  .account-greet{
+    font-size:14px;font-weight:600;color:var(--teal-deep);
+    background:var(--surface);border:1px solid var(--line);
+    padding:8px 14px;border-radius:999px;box-shadow:var(--shadow-soft);
+  }
+  .account-logout{
+    background:none;border:1.5px solid var(--line);color:var(--ink-soft);
+    font-size:13px;font-weight:600;padding:8px 16px;border-radius:999px;
+    transition:.2s;
+  }
+  .account-logout:hover{border-color:var(--terracotta);color:var(--terracotta);}
+
+  section{padding:34px 18px;max-width:980px;margin:0 auto;}
+  .section-head{margin-bottom:18px;max-width:640px;margin-left:auto;margin-right:auto;}
+  .eyebrow{
+    font-size:13px;font-weight:600;color:var(--teal);
+    letter-spacing:0.08em;text-transform:uppercase;
+  }
+  .section-title{font-size:clamp(21px,4vw,27px);margin-top:4px;}
+
+  /* ---------- Tuition Cards (single column, one after another) ---------- */
+  .tuition-list{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    max-width:640px;
+    margin:0 auto;
+  }
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px 20px 18px;
+    box-shadow:var(--shadow-soft);
+    display:flex;flex-direction:column;gap:12px;
+    animation:rise .45s ease both;
+    transition:box-shadow .2s ease, transform .2s ease;
+  }
+  .card:hover{box-shadow:var(--shadow);transform:translateY(-1px);}
+  @keyframes rise{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;}
+  .code{
+    font-size:12px;color:var(--ink-soft);
+    background:var(--bg);border:1px solid var(--line);
+    padding:3px 9px;border-radius:999px;font-weight:600;letter-spacing:.02em;
+  }
+  .medium-pill{
+    font-size:12px;font-weight:600;color:var(--teal-deep);
+    background:var(--gold-soft);padding:3px 10px;border-radius:999px;
+  }
+  .field-list{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .field{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:9px 12px;
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:9px;
+    font-size:14.5px;
+  }
+  .f-label{color:var(--ink-soft);font-weight:500;}
+  .f-value{color:var(--ink);font-weight:700;}
+  .field.salary .f-value{
+    font-family:'Baloo Da 2',sans-serif;font-size:19px;color:var(--teal-deep);
+  }
+  .apply-btn{
+    margin-top:2px;
+    width:100%;border:none;border-radius:12px;
+    background:linear-gradient(135deg,var(--teal),var(--teal-deep));color:#fff;
+    padding:13px;font-size:15.5px;font-weight:600;
+    box-shadow:0 6px 16px rgba(28,74,62,0.18);
+    transition:transform .15s ease, box-shadow .2s ease;
+    animation:breathe 3.2s ease-in-out infinite;
+  }
+  .apply-btn:hover{box-shadow:0 8px 20px rgba(28,74,62,0.26);transform:translateY(-1px);}
+  @keyframes breathe{0%,100%{box-shadow:0 0 0 0 rgba(47,111,98,0.0);}50%{box-shadow:0 0 0 6px rgba(47,111,98,0.06);}}
+
+  /* assigned tuition — guardian number sharing */
+  .card.assigned{border:1.5px solid var(--gold);background:#FFFDF6;}
+  .assigned-badge{
+    font-size:12px;font-weight:700;color:var(--teal-deep);
+    background:var(--gold-soft);padding:3px 10px;border-radius:999px;
+  }
+  .assigned-pinned-heading{
+    font-size:14.5px;font-weight:700;color:var(--teal-deep);
+    background:var(--gold-soft);border:1px solid #EFDBA0;border-radius:10px;
+    padding:10px 14px;margin-bottom:12px;
+  }
+  .guardian-btn-big[hidden]{display:none;}
+  .guardian-box{
+    display:flex;flex-direction:column;gap:8px;
+    padding:12px;background:var(--bg);border:1px solid var(--line);border-radius:9px;
+  }
+  .guardian-number-value{
+    font-family:'Baloo Da 2',sans-serif;font-size:17px;color:var(--teal-deep);
+    letter-spacing:.03em;
+  }
+  .guardian-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .guardian-actions a, .guardian-actions button{
+    flex:1;min-width:120px;text-align:center;text-decoration:none;
+    border:none;border-radius:10px;padding:11px 10px;font-size:14px;font-weight:600;
+  }
+  .btn-show-number{background:var(--surface);border:1.5px solid var(--teal) !important;color:var(--teal-deep);}
+  .btn-whatsapp{background:#25D366;color:#fff;}
+  .btn-phone{background:var(--teal);color:#fff;}
+
+  .see-more-wrap{text-align:center;margin-top:26px;}
+  .see-more{
+    background:transparent;border:2px solid var(--teal);color:var(--teal-deep);
+    padding:11px 30px;border-radius:999px;font-weight:600;font-size:15px;
+    transition:all .2s ease;
+  }
+  .see-more:hover{background:var(--teal);color:#fff;}
+  .see-more[hidden]{display:none;}
+
+  /* ---------- Testimonials ---------- */
+  .testi-wrap{max-width:640px;}
+  .carousel{
+    position:relative;overflow:hidden;border-radius:var(--radius);
+    touch-action:pan-y;
+    user-select:none;
+    background:var(--surface);
+    box-shadow:var(--shadow);
+  }
+  .carousel-track{
+    display:flex;
+    transition:transform .45s cubic-bezier(.22,.68,0,1.01);
+  }
+  .carousel-slide{
+    flex:0 0 90%;
+    margin-right:10%;
+    aspect-ratio:4/3;
+    position:relative;
+  }
+  .carousel-slide img{
+    width:100%;height:100%;object-fit:cover;border-radius:var(--radius);
+    pointer-events:none;
+  }
+  .carousel-dots{display:flex;justify-content:center;gap:7px;margin-top:14px;}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--line);transition:.25s;}
+  .dot.active{background:var(--teal);width:20px;border-radius:5px;}
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(32,40,37,0.55);
+    display:none;align-items:flex-end;justify-content:center;
+    z-index:100;backdrop-filter:blur(2px);
+  }
+  .overlay.open{display:flex;}
+  @media(min-width:640px){.overlay{align-items:center;}}
+  .modal{
+    background:var(--surface);
+    width:100%;max-width:460px;
+    border-radius:22px 22px 0 0;
+    padding:26px 24px 30px;
+    max-height:88vh;overflow-y:auto;
+    animation:slideup .3s ease;
+  }
+  @media(min-width:640px){.modal{border-radius:20px;}}
+  @keyframes slideup{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  .modal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .modal-close{background:none;border:none;font-size:22px;color:var(--ink-soft);line-height:1;padding:4px;}
+  .progress{height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin:10px 0 22px;}
+  .progress-bar{height:100%;background:var(--gold);border-radius:4px;transition:width .3s ease;}
+  .step{display:none;}
+  .step.active{display:block;animation:fadein .3s ease;}
+  .survey-step{display:block;}
+  @keyframes fadein{from{opacity:0;transform:translateX(8px);}to{opacity:1;transform:translateX(0);}}
+  .step label,.survey-step label{display:block;font-weight:600;font-size:16.5px;margin-bottom:12px;color:var(--ink);}
+  .step-hint{font-size:13px;color:var(--ink-soft);margin:-6px 0 12px;}
+  .step input[type=text],.step input[type=tel],.step input[type=number],.step input[type=password],.step select,
+  .survey-step input[type=text],.survey-step input[type=tel],.survey-step input[type=number],.survey-step select{
+    width:100%;padding:14px 16px;border-radius:14px;border:1.5px solid var(--line);
+    font-size:16px;font-family:inherit;background:var(--surface);color:var(--ink);
+    box-shadow:inset 0 1px 3px rgba(40,50,47,0.05);
+    transition:border-color .2s ease, box-shadow .2s ease;
+    -moz-appearance:textfield;
+  }
+  .step input[type=text]::placeholder,.step input[type=tel]::placeholder,.step input[type=number]::placeholder,
+  .survey-step input[type=text]::placeholder,.survey-step input[type=tel]::placeholder,.survey-step input[type=number]::placeholder{
+    color:var(--ink-soft);opacity:.6;
+  }
+  .step input[type=text]:focus,.step input[type=tel]:focus,.step input[type=number]:focus,
+  .step input[type=password]:focus,.step select:focus,
+  .survey-step input[type=text]:focus,.survey-step input[type=tel]:focus,.survey-step input[type=number]:focus,
+  .survey-step select:focus{
+    outline:none;border-color:var(--teal);
+    box-shadow:0 0 0 4px rgba(47,111,98,0.10), inset 0 1px 3px rgba(40,50,47,0.03);
+  }
+  .step input[type=text]:hover,.step input[type=tel]:hover,.step input[type=number]:hover,
+  .survey-step input[type=text]:hover,.survey-step input[type=tel]:hover,.survey-step input[type=number]:hover{
+    border-color:#c9c4b0;
+  }
+  .step input[type=number]::-webkit-outer-spin-button,
+  .step input[type=number]::-webkit-inner-spin-button,
+  .survey-step input[type=number]::-webkit-outer-spin-button,
+  .survey-step input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  .textarea-wrap{position:relative;}
+  .step textarea,.survey-step textarea{
+    width:100%;padding:16px 16px 30px;border-radius:16px;border:1.5px solid var(--line);
+    font-size:15.5px;font-family:inherit;background:var(--surface);color:var(--ink);
+    resize:vertical;min-height:112px;line-height:1.65;
+    box-shadow:inset 0 1px 3px rgba(40,50,47,0.05);
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .step textarea::placeholder,.survey-step textarea::placeholder{color:var(--ink-soft);opacity:.6;}
+  .step textarea:focus,.survey-step textarea:focus{
+    outline:none;border-color:var(--teal);
+    box-shadow:0 0 0 4px rgba(47,111,98,0.10), inset 0 1px 3px rgba(40,50,47,0.03);
+  }
+  .step textarea:hover,.survey-step textarea:hover{border-color:#c9c4b0;}
+  .textarea-count{
+    position:absolute;right:13px;bottom:11px;
+    font-size:11px;font-weight:600;color:var(--ink-soft);
+    background:var(--gold-soft);padding:2px 8px;border-radius:999px;
+    pointer-events:none;
+  }
+  .choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+  .choice-grid.single{grid-template-columns:1fr;}
+  .choice-btn{
+    padding:12px 10px;border-radius:11px;border:1.5px solid var(--line);
+    background:var(--bg);font-size:15px;font-weight:500;color:var(--ink);
+    text-align:center;transition:.15s;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .choice-btn::before{
+    content:"";width:16px;height:16px;border-radius:5px;border:1.5px solid var(--line);
+    background:var(--surface);flex-shrink:0;
+  }
+  .choice-btn.selected{border-color:var(--teal);background:var(--gold-soft);color:var(--teal-deep);font-weight:700;}
+  .choice-btn.selected::before{background:var(--teal);border-color:var(--teal);content:"✓";color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;}
+  .next-btn{
+    margin-top:20px;width:100%;padding:14px;border:none;border-radius:12px;
+    background:linear-gradient(135deg,var(--teal),var(--teal-deep));color:#fff;font-size:16px;font-weight:600;
+    box-shadow:0 6px 16px rgba(28,74,62,0.18);
+    transition:transform .15s ease, box-shadow .2s ease;
+  }
+  .next-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(28,74,62,0.26);}
+  .next-btn:disabled{background:#C7CDC6;box-shadow:none;transform:none;}
+  .switch-mode{text-align:center;margin-top:18px;font-size:14px;color:var(--ink-soft);}
+  .switch-mode button{background:none;border:none;color:var(--teal);font-weight:600;text-decoration:underline;}
+  .success-box{text-align:center;padding:10px 0;}
+  .success-box .tick{
+    width:56px;height:56px;border-radius:50%;background:var(--gold-soft);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;
+  }
+  .err-msg{color:#B5473B;font-size:13.5px;margin-top:8px;min-height:16px;}
+
+  footer{text-align:center;padding:30px 20px 40px;color:var(--ink-soft);font-size:13.5px;}
+
+  /* ---------- Guardian Number FAB + Page ---------- */
+  .guardian-btn-big{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    width:100%;max-width:640px;margin:0 auto 22px;
+    background:linear-gradient(135deg,var(--teal),var(--teal-deep));
+    color:#fff;border:none;border-radius:16px;
+    padding:18px 20px;font-size:17px;font-weight:700;
+    box-shadow:0 8px 22px rgba(32,78,68,0.28);
+    animation:breathe 3.2s ease-in-out infinite;
+  }
+  .guardian-btn-big:hover{transform:translateY(-1px);}
+  .guardian-btn-big .fab-icon{font-size:20px;line-height:1;}
+  .guardian-btn-big .fab-badge{
+    background:var(--gold);color:var(--teal-deep);
+    font-size:13px;font-weight:800;min-width:22px;height:22px;
+    border-radius:999px;display:inline-flex;align-items:center;justify-content:center;
+    padding:0 6px;
+  }
+  .guardian-btn-big .fab-badge[hidden]{display:none;}
+
+  .guardian-page-modal{max-width:640px;width:100%;}
+  .guardian-page-list{display:flex;flex-direction:column;gap:14px;margin-top:12px;}
+  .g-card{
+    background:var(--bg);border:1.5px solid var(--gold);border-radius:14px;
+    padding:16px;display:flex;flex-direction:column;gap:10px;
+  }
+  .g-card-top{display:flex;justify-content:space-between;align-items:center;}
+  .g-card-fields{display:flex;flex-direction:column;gap:6px;}
+  .g-card .field{background:var(--surface);}
+  .g-guardian-number{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:10px 12px;background:var(--gold-soft);border-radius:9px;
+  }
+  .g-guardian-number .f-value{
+    font-family:'Baloo Da 2',sans-serif;font-size:18px;color:var(--teal-deep);letter-spacing:.03em;
+  }
+  .g-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .g-actions a{
+    flex:1;min-width:130px;text-align:center;text-decoration:none;
+    border-radius:10px;padding:12px 10px;font-size:14.5px;font-weight:700;
+  }
+  .g-empty{text-align:center;color:var(--ink-soft);padding:26px 10px;}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="brand-mark">Tuition O Job Media</div>
+  <h1>Tuition O Job Media</h1>
+  <p class="tagline">সেরা শিক্ষকদের ঠিকানা</p>
+  <div class="trust-row">
+    <span class="trust-chip"><span class="dot"></span>যাচাইকৃত টিউশন</span>
+    <span class="trust-chip"><span class="dot"></span>নিরাপদ ও বিশ্বস্ত</span>
+    <span class="trust-chip"><span class="dot"></span>সরাসরি গার্ডিয়ান যোগাযোগ</span>
+  </div>
+</header>
+
+<div class="account-bar" id="accountBar" style="display:none;">
+  <span class="account-greet">👋 <span id="accountName"></span></span>
+  <button type="button" id="logoutUserBtn" class="account-logout">লগ আউট</button>
+</div>
+
+<section id="tuitions1">
+  <div class="section-head">
+    <div class="eyebrow">এই মুহূর্তে উপলব্ধ</div>
+    <h2 class="section-title">টিউশনসমূহ</h2>
+  </div>
+  <div class="tuition-list" id="grid1"></div>
+  <div class="see-more-wrap"><button class="see-more" id="seeMoreBtn">আরও দেখুন</button></div>
+</section>
+
+<section id="testimonials" class="testi-wrap">
+  <div class="section-head">
+    <div class="eyebrow">অভিজ্ঞতা</div>
+    <h2 class="section-title">শিক্ষার্থীরা যা বলছেন</h2>
+  </div>
+  <div class="carousel" id="carousel">
+    <div class="carousel-track" id="carouselTrack"></div>
+  </div>
+  <div class="carousel-dots" id="carouselDots"></div>
+</section>
+
+<section id="tuitions2">
+  <div class="section-head">
+    <div class="eyebrow">আরও সুযোগ</div>
+    <h2 class="section-title">আরও টিউশন</h2>
+  </div>
+  <div class="tuition-list" id="grid2"></div>
+</section>
+
+<section id="postSignup" style="display:none;">
+  <button type="button" class="guardian-btn-big" id="guardianBtnBig" hidden>
+    <span class="fab-icon">📞</span>
+    <span>গার্ডিয়ান নম্বর দেখুন</span>
+    <span class="fab-badge" id="guardianFabBadge" hidden>0</span>
+  </button>
+  <div class="section-head">
+    <div class="eyebrow">আপনার জন্য</div>
+    <h2 class="section-title" id="postSignupTitle">আপনাকে দেখানো টিউশনসমূহ</h2>
+  </div>
+  <div class="tuition-list" id="postSignupList"></div>
+</section>
+
+<footer>&copy; <span id="year"></span> Tuition O Job Media — সেরা শিক্ষকদের ঠিকানা</footer>
+
+<!-- Guardian Number Page — lists every tuition this tutor has been given
+     guardian-contact access to, with class, location, salary, the guardian
+     number itself, and Phone Now / WhatsApp Now buttons. -->
+<div class="overlay" id="guardianOverlay">
+  <div class="modal guardian-page-modal" id="guardianModal">
+    <div class="modal-top">
+      <div class="eyebrow">গার্ডিয়ান নম্বর</div>
+      <button class="modal-close" id="guardianClose" aria-label="বন্ধ করুন">&times;</button>
+    </div>
+    <p style="color:var(--ink-soft);font-size:14px;margin:2px 0 0;">যেসব টিউশনের গার্ডিয়ান নম্বরে আপনাকে অ্যাক্সেস দেওয়া হয়েছে, সেগুলো এখানে দেখা যাবে।</p>
+    <div class="guardian-page-list" id="guardianPageList"></div>
+  </div>
+</div>
+
+<!-- Signup / Signin Modal -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <div class="modal-top">
+      <div class="eyebrow" id="modalEyebrow">আবেদন করুন</div>
+      <button class="modal-close" id="modalClose" aria-label="বন্ধ করুন">&times;</button>
+    </div>
+    <div class="progress"><div class="progress-bar" id="progressBar" style="width:14%"></div></div>
+
+    <form id="signupForm">
+      <div class="step active" data-step="0">
+        <label for="f_name">আপনার নাম কী?</label>
+        <input type="text" id="f_name" autocomplete="name" placeholder="যেমনঃ রাকিব হাসান">
+        <button type="button" class="next-btn" data-next>পরবর্তী</button>
+        <div class="err-msg"></div>
+      </div>
+
+      <div class="step" data-step="1">
+        <label for="f_wa">হোয়াটসঅ্যাপ নম্বর দিন</label>
+        <div class="step-hint">01XXXXXXXXX অথবা +8801XXXXXXXXX ফরম্যাটে লিখুন</div>
+        <input type="tel" id="f_wa" autocomplete="tel" placeholder="01XXXXXXXXX">
+        <button type="button" class="next-btn" data-next>পরবর্তী</button>
+        <div class="err-msg"></div>
+      </div>
+
+      <div class="step" data-step="2">
+        <label>আপনি কোন বিশ্ববিদ্যালয়ে পড়েন?</label>
+        <div class="choice-grid" id="uniChoices">
+          <button type="button" class="choice-btn" data-val="CUET">CUET</button>
+          <button type="button" class="choice-btn" data-val="CVASU">CVASU</button>
+          <button type="button" class="choice-btn" data-val="CU">CU</button>
+          <button type="button" class="choice-btn" data-val="CMC">CMC</button>
+        </div>
+        <input type="text" id="f_uni_other" placeholder="তালিকায় না থাকলে এখানে লিখুন" style="margin-top:10px;">
+        <button type="button" class="next-btn" data-next>পরবর্তী</button>
+        <div class="err-msg"></div>
+      </div>
+
+      <div class="step" data-step="3">
+        <label>আপনি কোন বর্ষে পড়ছেন?</label>
+        <div class="choice-grid" id="yearChoices">
+          <button type="button" class="choice-btn" data-val="১ম বর্ষ">১ম বর্ষ</button>
+          <button type="button" class="choice-btn" data-val="২য় বর্ষ">২য় বর্ষ</button>
+          <button type="button" class="choice-btn" data-val="৩য় বর্ষ">৩য় বর্ষ</button>
+          <button type="button" class="choice-btn" data-val="৪র্থ বর্ষ">৪র্থ বর্ষ</button>
+          <button type="button" class="choice-btn" data-val="মাস্টার্স">মাস্টার্স</button>
+          <button type="button" class="choice-btn" data-val="পিএইচডি">পিএইচডি</button>
+        </div>
+        <button type="button" class="next-btn" data-next disabled>পরবর্তী</button>
+        <div class="err-msg"></div>
+      </div>
+
+      <div class="step" data-step="4">
+        <label>আপনি কোন কোন এলাকায় টিউশন করতে চান?</label>
+        <div class="step-hint">একাধিক এলাকা নির্বাচন করতে পারবেন</div>
+        <div class="choice-grid single" id="zoneChoices"></div>
+        <div id="zoneSubWrap" style="display:none;margin-top:12px;">
+          <label style="font-size:14.5px;">নির্দিষ্ট করে বলুন</label>
+          <div class="step-hint">এখানেও একাধিক নির্বাচন করা যাবে</div>
+          <div class="choice-grid single" id="zoneSubChoices"></div>
+        </div>
+        <button type="button" class="next-btn" data-next disabled>পরবর্তী</button>
+        <div class="err-msg"></div>
+      </div>
+
+      <div class="step" data-step="5">
+        <label for="f_pass">একটি পাসওয়ার্ড দিন</label>
+        <input type="password" id="f_pass" autocomplete="new-password" placeholder="কমপক্ষে ৪ অক্ষর">
+        <button type="button" class="next-btn" id="submitBtn">আবেদন সম্পন্ন করুন</button>
+        <div class="err-msg"></div>
+      </div>
+
+      <div class="step" data-step="signin">
+        <label for="si_wa">হোয়াটসঅ্যাপ নম্বর</label>
+        <input type="tel" id="si_wa" placeholder="01XXXXXXXXX" style="margin-bottom:12px;">
+        <label for="si_pass">পাসওয়ার্ড</label>
+        <input type="password" id="si_pass" placeholder="পাসওয়ার্ড">
+        <button type="button" class="next-btn" id="signinBtn">সাইন ইন করুন</button>
+        <div class="err-msg" id="signinErr"></div>
+      </div>
+
+      <div class="step" data-step="done">
+        <div class="success-box">
+          <div class="tick">✓</div>
+          <h3 style="margin-bottom:8px;">ধন্যবাদ!</h3>
+          <p style="color:var(--ink-soft);" id="doneMsg">আপনার আবেদন সফলভাবে জমা হয়েছে। আমরা শীঘ্রই হোয়াটসঅ্যাপে যোগাযোগ করব।</p>
+        </div>
+      </div>
+    </form>
+
+    <div class="switch-mode" id="switchModeWrap">
+      <span id="switchModeText">আগে থেকেই অ্যাকাউন্ট আছে? </span>
+      <button type="button" id="switchModeBtn">সাইন ইন করুন</button>
+    </div>
+  </div>
+</div>
+
+<!-- Profile Update Modal (post-signup apply) -->
+<div class="overlay" id="profileOverlay">
+  <div class="modal" id="profileModal">
+    <div class="modal-top">
+      <div class="eyebrow">আবেদন করতে প্রোফাইল আপডেট করুন</div>
+      <button class="modal-close" id="profileModalClose" aria-label="বন্ধ করুন">&times;</button>
+    </div>
+    <div id="profileFormWrap">
+      <label style="display:block;font-weight:600;font-size:16.5px;margin-bottom:6px;">আপনি কোন কোন এলাকায় টিউশন করতে চান?</label>
+      <div class="step-hint">একাধিক এলাকা নির্বাচন করতে পারবেন</div>
+      <div class="choice-grid single" id="profileZoneChoices"></div>
+      <div id="profileZoneSubWrap" style="display:none;margin-top:12px;">
+        <label style="font-size:14.5px;">নির্দিষ্ট করে বলুন</label>
+        <div class="choice-grid single" id="profileZoneSubChoices"></div>
+      </div>
+      <button type="button" class="next-btn" id="profileSubmitBtn">প্রোফাইল আপডেট করুন</button>
+      <div class="err-msg" id="profileErr"></div>
+    </div>
+    <div class="success-box" id="profileSuccess" style="display:none;">
+      <div class="tick">✓</div>
+      <h3 style="margin-bottom:8px;">আপডেট হয়েছে!</h3>
+      <p style="color:var(--ink-soft);">আপনার প্রোফাইল সফলভাবে হালনাগাদ হয়েছে। আমরা শীঘ্রই যোগাযোগ করব।</p>
+    </div>
+  </div>
+</div>
+
+<!-- Extended Survey Modal -->
+<div class="overlay" id="surveyOverlay">
+  <div class="modal" id="surveyModal">
+    <div class="modal-top">
+      <div class="eyebrow">আরও কিছু তথ্য দিন</div>
+      <button class="modal-close" id="surveyModalClose" aria-label="বন্ধ করুন">&times;</button>
+    </div>
+    <div class="progress"><div class="progress-bar" id="surveyProgressBar" style="width:5%"></div></div>
+
+    <div id="surveyFormWrap">
+      <div id="surveyStepsWrap" class="survey-step"></div>
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button type="button" class="next-btn" id="surveyBackBtn" style="display:none;background:transparent;border:1.5px solid var(--line);color:var(--ink);flex:0 0 90px;">পিছনে</button>
+        <button type="button" class="next-btn" id="surveyNextBtn" style="flex:1;">পরবর্তী</button>
+      </div>
+      <div class="err-msg" id="surveyErr"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= CONFIG ================= */
+const SUPABASE_URL = "https://egsklbezrommbtyjyvak.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnc2tsYmV6cm9tbWJ0eWp5dmFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1MzA1NDYsImV4cCI6MjA5OTEwNjU0Nn0.g2r1gWeBg4RXQTsikure9wQJTXC0aNUw2p2V99-cZl4";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ================= PHONE NUMBER HELPERS ================= */
+// Accepts both 01XXXXXXXXX (11 digits) and +8801XXXXXXXXX / 8801XXXXXXXXX formats.
+function isValidBDPhone(v){
+  const s = (v || '').trim().replace(/[\s\-]/g,'');
+  return /^01[3-9][0-9]{8}$/.test(s) || /^\+?8801[3-9][0-9]{8}$/.test(s);
+}
+// Normalizes any accepted format down to the canonical 01XXXXXXXXX form for storage/lookup.
+function normalizeBDPhone(v){
+  const s = (v || '').trim().replace(/[\s\-]/g,'');
+  if(/^\+8801[3-9][0-9]{8}$/.test(s)) return '0' + s.slice(4);
+  if(/^8801[3-9][0-9]{8}$/.test(s)) return '0' + s.slice(3);
+  return s;
+}
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ================= TUITION GENERATOR ================= */
+const ZONES = [
+  {name:"চকবাজার"},
+  {name:"আন্দরকিল্লা"},
+  {name:"সদরঘাট"},
+  {name:"বকলিয়া"},
+  {name:"হাটহাজারী"},
+  {name:"আগ্রাবাদ"},
+  {name:"অক্সিজেন"},
+  {name:"খুলশী"},
+  {name:"হালিশহর", sub:["হালিশহর এ ব্লক","মুন্সিপাড়া","কাস্টমস হাউস","বেপজা","পতেঙ্গা"]},
+  {name:"২ নং গেট"}
+];
+const CLASSES = ["৬ষ্ঠ","৭ম","৮ম","৯ম","১০ম"];
+const SALARIES = [5000,5500,6000,6500,7000,7500];
+const DAYS = [3,4];
+const TIMES = ["সন্ধ্যা","যেকোনো সময়"];
+
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+function randomTuition(){
+  const zone = pick(ZONES);
+  return {
+    code: "TM-" + Math.floor(1000 + Math.random()*9000),
+    cls: pick(CLASSES),
+    salary: pick(SALARIES),
+    days: pick(DAYS),
+    time: pick(TIMES),
+    medium: "বাংলা মাধ্যম",
+    area: zone.name
+  };
+}
+
+// keeps every tuition ever generated for this visit, in order shown
+const shownTuitions = [];
+
+function cardHTML(t, opts){
+  const revealLocation = opts && opts.revealLocation;
+  const action = (opts && opts.action) || 'signup';
+  const buttonLabel = action === 'profile' ? 'আবেদন করতে প্রোফাইল আপডেট করুন' : 'লগইন করে আবেদন করুন';
+  return `
+  <div class="card">
+    <div class="card-top">
+      <span class="code">${t.code}</span>
+      <span class="medium-pill">${t.medium}</span>
+    </div>
+    <div class="field-list">
+      <div class="field"><span class="f-label">ক্লাস</span><span class="f-value">${t.cls}</span></div>
+      <div class="field salary"><span class="f-label">বেতন</span><span class="f-value">৳${t.salary.toLocaleString('en-IN')} / মাস</span></div>
+      <div class="field"><span class="f-label">সপ্তাহে দিন</span><span class="f-value">${t.days} দিন</span></div>
+      <div class="field"><span class="f-label">সময়</span><span class="f-value">${t.time}</span></div>
+      <div class="field"><span class="f-label">মাধ্যম</span><span class="f-value">${t.medium}</span></div>
+      ${revealLocation ? `<div class="field"><span class="f-label">এলাকা</span><span class="f-value">${t.area}</span></div>` : ''}
+    </div>
+    <button class="apply-btn" data-code="${t.code}" data-action="${action}">${buttonLabel}</button>
+  </div>`;
+}
+
+function renderInto(gridEl, count){
+  const newOnes = Array.from({length:count}, () => randomTuition());
+  newOnes.forEach(t => shownTuitions.push(t));
+  const html = newOnes.map(t => cardHTML(t, {revealLocation:false, action:'signup'})).join("");
+  gridEl.insertAdjacentHTML('beforeend', html);
+}
+
+const grid1 = document.getElementById('grid1');
+const grid2 = document.getElementById('grid2');
+renderInto(grid1, 4);
+renderInto(grid2, 5);
+
+const seeMoreBtn = document.getElementById('seeMoreBtn');
+seeMoreBtn.addEventListener('click', () => {
+  renderInto(grid1, 5);
+  seeMoreBtn.setAttribute('hidden','');
+});
+
+/* ================= REAL TUITIONS (shown only after survey is completed) ================= */
+const REAL_TUITION_LABELS = {
+  gender: { male:'ছেলে শিক্ষার্থী', female:'মেয়ে শিক্ষার্থী' },
+  religion: { muslim:'মুসলিম পরিবার', hindu:'হিন্দু পরিবার', buddhist:'বৌদ্ধ পরিবার', christian:'খ্রিস্টান পরিবার' },
+  university: { cuet:'CUET পছন্দনীয়', cu:'CU পছন্দনীয়', cmc:'CMC পছন্দনীয়', cvasu:'CVASU পছন্দনীয়' },
+  group_type: { science:'বিজ্ঞান বিভাগ', commerce:'বাণিজ্য বিভাগ', arts:'মানবিক বিভাগ' }
+};
+
+const REAL_TUITION_COLUMNS = "code,location,gender,religion,university,salary,subjects,class,group_type,department,days,time_slot,medium,created_at";
+
+async function fetchRealTuitions(){
+  const { data, error } = await sb.from('tm_tuitions_public')
+    .select(REAL_TUITION_COLUMNS)
+    .order('created_at', { ascending:false });
+  if(error){ console.error('failed to load real tuitions:', error); return []; }
+  return data || [];
+}
+
+function realCardHTML(t, assignedInfo){
+  const extraFields = [];
+  if(t.gender && t.gender !== 'any'){
+    extraFields.push('<div class="field"><span class="f-label">জেন্ডার</span><span class="f-value">' + (REAL_TUITION_LABELS.gender[t.gender] || t.gender) + '</span></div>');
+  }
+  if(t.religion && t.religion !== 'any'){
+    extraFields.push('<div class="field"><span class="f-label">ধর্ম</span><span class="f-value">' + (REAL_TUITION_LABELS.religion[t.religion] || t.religion) + '</span></div>');
+  }
+  if(t.university && t.university !== 'any'){
+    extraFields.push('<div class="field"><span class="f-label">বিশ্ববিদ্যালয়</span><span class="f-value">' + (REAL_TUITION_LABELS.university[t.university] || t.university) + '</span></div>');
+  }
+  if(t.group_type && t.group_type !== 'any'){
+    extraFields.push('<div class="field"><span class="f-label">গ্রুপ</span><span class="f-value">' + (REAL_TUITION_LABELS.group_type[t.group_type] || t.group_type) + '</span></div>');
+  }
+  if(t.department && t.department.toLowerCase() !== 'any'){
+    extraFields.push('<div class="field"><span class="f-label">ডিপার্টমেন্ট</span><span class="f-value">' + t.department + '</span></div>');
+  }
+  const applied = currentUser && currentUser.appliedRealCodes && currentUser.appliedRealCodes.has(t.code);
+  const mediumPill = t.medium ? ('<span class="medium-pill">' + t.medium + '</span>') : '';
+  const classField = t.class ? ('<div class="field"><span class="f-label">ক্লাস</span><span class="f-value">' + t.class + '</span></div>') : '';
+  const daysField = t.days ? ('<div class="field"><span class="f-label">সপ্তাহে দিন</span><span class="f-value">' + t.days + '</span></div>') : '';
+  const timeField = t.time_slot ? ('<div class="field"><span class="f-label">সময়</span><span class="f-value">' + t.time_slot + '</span></div>') : '';
+  const subjField = t.subjects ? ('<div class="field"><span class="f-label">বিষয়</span><span class="f-value">' + t.subjects + '</span></div>') : '';
+
+  // If this tuition's guardian number has been shared with the logged-in
+  // tutor (via Son of Anton), show it — and WhatsApp/Phone buttons — right
+  // on this same card, instead of only on a separate card elsewhere that's
+  // easy to miss.
+  const assignedBadge = assignedInfo ? '<span class="assigned-badge">আপনাকে দেওয়া হয়েছে</span>' : '';
+  let guardianBoxHtml = '';
+  if(assignedInfo){
+    const digits = String(assignedInfo.guardian_number || '').replace(/[^0-9]/g, '');
+    const waNumber = digits.startsWith('0') ? ('88' + digits) : digits;
+    guardianBoxHtml =
+      '<div class="guardian-box">' +
+        '<div class="guardian-number-value" data-number-value hidden>' + escapeHtmlLocal(assignedInfo.guardian_number || '') + '</div>' +
+        '<div class="guardian-actions">' +
+          '<button type="button" class="btn-show-number" data-show-number="' + assignedInfo.id + '">গার্ডিয়ানের নম্বর দেখুন</button>' +
+          '<a class="btn-whatsapp" href="https://wa.me/' + waNumber + '" target="_blank" rel="noopener">WhatsApp</a>' +
+          '<a class="btn-phone" href="tel:' + digits + '">Phone</a>' +
+        '</div>' +
+      '</div>';
+  }
+
+  return '' +
+  '<div class="card' + (assignedInfo?' assigned':'') + '"' + (assignedInfo?(' data-tuition-id="' + assignedInfo.id + '"'):'') + '>' +
+    '<div class="card-top">' +
+      '<span class="code">' + t.code + '</span>' +
+      mediumPill + assignedBadge +
+    '</div>' +
+    '<div class="field-list">' +
+      '<div class="field"><span class="f-label">এলাকা</span><span class="f-value">' + (t.location || '') + '</span></div>' +
+      '<div class="field salary"><span class="f-label">বেতন</span><span class="f-value">৳' + Number(t.salary||0).toLocaleString('en-IN') + ' / মাস</span></div>' +
+      classField + daysField + timeField + subjField +
+      extraFields.join('') +
+    '</div>' +
+    '<button class="apply-btn" data-code="' + t.code + '" data-action="real" ' + (applied?'disabled':'') + '>' + (applied ? 'আবেদন করা হয়েছে ✓' : 'আবেদন করুন') + '</button>' +
+    guardianBoxHtml +
+  '</div>';
+}
+
+/* ================= ASSIGNED TUITIONS (guardian number shared with you) =================
+   When a moderator/admin gives you a tuition's guardian number from Son of
+   Anton, it shows up here — pinned above every other tuition, guardian
+   number hidden behind a reveal button, plus direct WhatsApp / call buttons. */
+
+let lastAssignedFetchError = null;
+async function fetchAssignedTuitions(){
+  lastAssignedFetchError = null;
+  if(!currentUser || !currentUser.password_hash) return [];
+  try{
+    const { data, error } = await sb.rpc('tutor_get_assigned_tuitions', {
+      p_whatsapp: currentUser.whatsapp,
+      p_password_hash: currentUser.password_hash
+    });
+    if(error) throw error;
+    return data || [];
+  }catch(err){
+    console.error('failed to load assigned tuitions:', err);
+    lastAssignedFetchError = err;
+    return [];
+  }
+}
+
+function markTuitionSeen(tuitionId){
+  if(!currentUser || !currentUser.password_hash) return;
+  sb.rpc('tutor_mark_tuition_seen', {
+    p_whatsapp: currentUser.whatsapp,
+    p_password_hash: currentUser.password_hash,
+    p_tuition_id: tuitionId
+  }).then(function(res){ if(res.error) console.error(res.error); });
+}
+
+function assignedCardHTML(t){
+  const classField = t.class ? ('<div class="field"><span class="f-label">ক্লাস</span><span class="f-value">' + t.class + '</span></div>') : '';
+  const daysField = t.days ? ('<div class="field"><span class="f-label">সপ্তাহে দিন</span><span class="f-value">' + t.days + '</span></div>') : '';
+  const timeField = t.time_slot ? ('<div class="field"><span class="f-label">সময়</span><span class="f-value">' + t.time_slot + '</span></div>') : '';
+  const subjField = t.subjects ? ('<div class="field"><span class="f-label">বিষয়</span><span class="f-value">' + t.subjects + '</span></div>') : '';
+  const digits = String(t.guardian_number || '').replace(/[^0-9]/g, '');
+  const waNumber = digits.startsWith('0') ? ('88' + digits) : digits;
+  return '' +
+  '<div class="card assigned" data-tuition-id="' + t.id + '">' +
+    '<div class="card-top">' +
+      '<span class="code">' + t.code + '</span>' +
+      '<span class="assigned-badge">আপনাকে দেওয়া হয়েছে</span>' +
+    '</div>' +
+    '<div class="field-list">' +
+      '<div class="field"><span class="f-label">এলাকা</span><span class="f-value">' + (t.location || '') + '</span></div>' +
+      '<div class="field salary"><span class="f-label">বেতন</span><span class="f-value">৳' + Number(t.salary||0).toLocaleString('en-IN') + ' / মাস</span></div>' +
+      classField + daysField + timeField + subjField +
+    '</div>' +
+    '<div class="guardian-box">' +
+      '<div class="guardian-number-value" data-number-value hidden>' + escapeHtmlLocal(t.guardian_number || '') + '</div>' +
+      '<div class="guardian-actions">' +
+        '<button type="button" class="btn-show-number" data-show-number="' + t.id + '">গার্ডিয়ানের নম্বর দেখুন</button>' +
+        '<a class="btn-whatsapp" href="https://wa.me/' + waNumber + '" target="_blank" rel="noopener">WhatsApp</a>' +
+        '<a class="btn-phone" href="tel:' + digits + '">Phone</a>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+/* ================= GUARDIAN NUMBER PAGE (dedicated) =================
+   A separate, always-reachable page (behind the floating "গার্ডিয়ান নম্বর"
+   button) that lists every tuition this tutor has been given guardian-
+   contact access to, showing class, location, salary, the guardian number
+   itself, plus Phone Now / WhatsApp Now buttons. This reuses the same
+   tutor_get_assigned_tuitions RPC that already powers the inline guardian
+   boxes above, so access is controlled entirely by what the admin has
+   shared via Son of Anton — the main site still never touches numbers the
+   tutor hasn't been granted. */
+const guardianFab = document.getElementById('guardianBtnBig');
+const guardianFabBadge = document.getElementById('guardianFabBadge');
+const guardianOverlay = document.getElementById('guardianOverlay');
+const guardianPageList = document.getElementById('guardianPageList');
+const guardianClose = document.getElementById('guardianClose');
+
+function guardianPageCardHTML(t){
+  const classField = t.class ? ('<div class="field"><span class="f-label">ক্লাস</span><span class="f-value">' + t.class + '</span></div>') : '';
+  const digits = String(t.guardian_number || '').replace(/[^0-9]/g, '');
+  const waNumber = digits.startsWith('0') ? ('88' + digits) : digits;
+  return '' +
+  '<div class="g-card">' +
+    '<div class="g-card-top">' +
+      '<span class="code">' + t.code + '</span>' +
+      '<span class="assigned-badge">আপনাকে দেওয়া হয়েছে</span>' +
+    '</div>' +
+    '<div class="g-card-fields">' +
+      classField +
+      '<div class="field"><span class="f-label">এলাকা</span><span class="f-value">' + (t.location || '') + '</span></div>' +
+      '<div class="field salary"><span class="f-label">বেতন</span><span class="f-value">৳' + Number(t.salary||0).toLocaleString('en-IN') + ' / মাস</span></div>' +
+    '</div>' +
+    '<div class="g-guardian-number">' +
+      '<span class="f-label">গার্ডিয়ানের নম্বর</span>' +
+      '<span class="f-value">' + escapeHtmlLocal(t.guardian_number || '') + '</span>' +
+    '</div>' +
+    '<div class="g-actions">' +
+      '<a class="btn-phone" href="tel:' + digits + '">এখনই ফোন করুন</a>' +
+      '<a class="btn-whatsapp" href="https://wa.me/' + waNumber + '" target="_blank" rel="noopener">এখনই হোয়াটসঅ্যাপ করুন</a>' +
+    '</div>' +
+  '</div>';
+}
+
+async function renderGuardianPage(){
+  guardianPageList.innerHTML = '<p class="g-empty">লোড হচ্ছে...</p>';
+  const assigned = await fetchAssignedTuitions();
+  if(!assigned.length){
+    if(lastAssignedFetchError){
+      guardianPageList.innerHTML = '<p class="g-empty">দুঃখিত, নম্বর লোড করতে একটি টেকনিক্যাল সমস্যা হয়েছে। কিছুক্ষণ পর আবার চেষ্টা করুন।</p>';
+    } else {
+      guardianPageList.innerHTML = '<p class="g-empty">এই মুহূর্তে আপনাকে কোনো গার্ডিয়ান নম্বর দেওয়া হয়নি।</p>';
+    }
+    return assigned;
+  }
+  guardianPageList.innerHTML = assigned.map(guardianPageCardHTML).join('');
+  assigned.forEach(function(t){ if(!t.seen_by_tutor) markTuitionSeen(t.id); });
+  return assigned;
+}
+
+// Shows/hides the always-on-top "গার্ডিয়ান নম্বর দেখুন" button — only ever
+// visible to a tutor who currently has at least one tuition's guardian
+// number shared with him. The little badge on top of it reflects how many
+// of those are still unseen. Pass an already-fetched list (e.g. from
+// renderRealTuitions) to avoid a redundant round-trip; otherwise this
+// fetches it itself.
+async function updateGuardianFab(assignedList){
+  if(!currentUser) return;
+  const assigned = assignedList || await fetchAssignedTuitions();
+  const hasAny = assigned.length > 0;
+  guardianFab.hidden = !hasAny;
+  if(!hasAny){ guardianFabBadge.hidden = true; return; }
+  const unseen = assigned.filter(function(t){ return !t.seen_by_tutor; }).length;
+  if(unseen > 0){ guardianFabBadge.hidden = false; guardianFabBadge.textContent = unseen; }
+  else { guardianFabBadge.hidden = true; }
+}
+
+guardianFab.addEventListener('click', () => {
+  guardianOverlay.classList.add('open');
+  renderGuardianPage().then(updateGuardianFab);
+});
+guardianClose.addEventListener('click', () => guardianOverlay.classList.remove('open'));
+guardianOverlay.addEventListener('click', e => { if(e.target === guardianOverlay) guardianOverlay.classList.remove('open'); });
+
+function escapeHtmlLocal(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+  });
+}
+
+function wireAssignedCardButtons(){
+  document.querySelectorAll('[data-show-number]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const card = btn.closest('.card.assigned');
+      const valueEl = card.querySelector('[data-number-value]');
+      valueEl.hidden = false;
+      btn.textContent = 'নম্বর দেখানো হয়েছে \u2713';
+      btn.disabled = true;
+    });
+  });
+}
+
+async function renderRealTuitions(){
+  document.getElementById('tuitions1').style.display = 'none';
+  document.getElementById('tuitions2').style.display = 'none';
+  const postSection = document.getElementById('postSignup');
+  const postList = document.getElementById('postSignupList');
+  const postTitle = document.getElementById('postSignupTitle');
+  if(postTitle) postTitle.textContent = 'আপনার জন্য টিউশনসমূহ';
+  postList.innerHTML = '<p style="text-align:center;color:var(--ink-soft);">টিউশন লোড হচ্ছে...</p>';
+  postSection.style.display = 'block';
+  const [tuitions, assigned] = await Promise.all([fetchRealTuitions(), fetchAssignedTuitions()]);
+  if(!tuitions.length && !assigned.length){
+    postList.innerHTML = '<p style="text-align:center;color:var(--ink-soft);">এই মুহূর্তে কোনো নতুন টিউশন নেই। শীঘ্রই আসছে!</p>';
+    updateGuardianFab(assigned);
+    return;
+  }
+  // Every tuition this tutor is currently assigned to (guardian number
+  // shared with him) is pinned above the rest of the list, under a shared
+  // heading — for as long as he stays assigned. This holds regardless of
+  // where the tuition would otherwise have sorted in the public list.
+  const assignedByCode = {};
+  assigned.forEach(function(t){ assignedByCode[t.code] = t; });
+  const matchedCodes = new Set();
+  const pinnedCards = [];
+  const normalCards = [];
+  tuitions.forEach(function(t){
+    const a = assignedByCode[t.code];
+    if(a){ matchedCodes.add(t.code); pinnedCards.push(realCardHTML(t, a)); }
+    else normalCards.push(realCardHTML(t, null));
+  });
+  // Assigned tuitions that no longer show up in the public list at all
+  // (e.g. status changed since being assigned) still get pinned, via the
+  // guardian-info-only fallback card.
+  const leftoverPinnedCards = assigned
+    .filter(function(t){ return !matchedCodes.has(t.code); })
+    .map(function(t){ return assignedCardHTML(t); });
+  const allPinnedHtml = leftoverPinnedCards.concat(pinnedCards).join('');
+  const pinnedHeadingHtml = allPinnedHtml
+    ? '<div class="assigned-pinned-heading">\uD83D\uDCCC আপনাকে এসাইন করা টিউশন</div>'
+    : '';
+  postList.innerHTML = pinnedHeadingHtml + allPinnedHtml + normalCards.join('');
+  wireAssignedCardButtons();
+  // The tutor has now actually seen this assignment on their own page —
+  // let admins/mods see that on the tuition row and in Son of Anton.
+  assigned.forEach(function(t){ if(!t.seen_by_tutor) markTuitionSeen(t.id); });
+  updateGuardianFab(assigned);
+}
+
+async function applyToRealTuition(code, btnEl){
+  if(!currentUser) return;
+  if(btnEl){ btnEl.disabled = true; btnEl.textContent = 'পাঠানো হচ্ছে...'; }
+  try{
+    const { error } = await sb.from('tm_applicants')
+      .update({ applied_tuition_code: code })
+      .eq('whatsapp', currentUser.whatsapp);
+    if(error) throw error;
+    if(!currentUser.appliedRealCodes) currentUser.appliedRealCodes = new Set();
+    currentUser.appliedRealCodes.add(code);
+    if(btnEl){ btnEl.textContent = 'আবেদন করা হয়েছে ✓'; }
+  }catch(err){
+    console.error(err);
+    if(btnEl){ btnEl.disabled = false; btnEl.textContent = 'আবেদন করুন'; }
+    alert('দুঃখিত, কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+  }
+}
+
+/* ================= TESTIMONIAL CAROUSEL ================= */
+// Replace these with your ImageKit URLs
+const TESTIMONIAL_IMAGES = [
+  "https://ik.imagekit.io/demo/img/image1.jpeg",
+  "https://ik.imagekit.io/demo/img/image2.jpeg",
+  "https://ik.imagekit.io/demo/img/image3.jpeg",
+  "https://ik.imagekit.io/demo/img/image4.jpeg"
+];
+
+const track = document.getElementById('carouselTrack');
+const dotsWrap = document.getElementById('carouselDots');
+let slideIndex = 0;
+let autoTimer = null;
+
+TESTIMONIAL_IMAGES.forEach((src,i) => {
+  track.insertAdjacentHTML('beforeend', `<div class="carousel-slide"><img src="${src}" alt="শিক্ষার্থীর অভিজ্ঞতা ${i+1}" loading="lazy"></div>`);
+  dotsWrap.insertAdjacentHTML('beforeend', `<div class="dot" data-i="${i}"></div>`);
+});
+const dots = Array.from(dotsWrap.children);
+
+function goTo(i){
+  slideIndex = (i + TESTIMONIAL_IMAGES.length) % TESTIMONIAL_IMAGES.length;
+  track.style.transform = `translateX(-${slideIndex * 100}%)`;
+  dots.forEach((d,idx) => d.classList.toggle('active', idx === slideIndex));
+}
+function startAuto(){
+  clearInterval(autoTimer);
+  autoTimer = setInterval(() => goTo(slideIndex+1), 4000);
+}
+goTo(0); startAuto();
+dots.forEach(d => d.addEventListener('click', () => { goTo(+d.dataset.i); startAuto(); }));
+
+// swipe support
+const carouselEl = document.getElementById('carousel');
+let dragStartX = null, dragging = false;
+carouselEl.addEventListener('pointerdown', e => { dragStartX = e.clientX; dragging = true; clearInterval(autoTimer); });
+carouselEl.addEventListener('pointermove', e => {
+  if(!dragging) return;
+});
+window.addEventListener('pointerup', e => {
+  if(!dragging) return;
+  dragging = false;
+  const delta = e.clientX - dragStartX;
+  if(Math.abs(delta) > 40){ goTo(slideIndex + (delta < 0 ? 1 : -1)); }
+  startAuto();
+});
+
+/* ================= CURRENT USER ================= */
+let currentUser = null; // {whatsapp, name, zones, zonesSub}
+let pendingApplyCode = null;
+
+/* ---- session persistence (localStorage, so the user stays logged in) ---- */
+const USER_SESSION_KEY = 'tom_user_session';
+function saveUserSession(){
+  if(!currentUser) return;
+  localStorage.setItem(USER_SESSION_KEY, JSON.stringify({ whatsapp: currentUser.whatsapp, password_hash: currentUser.password_hash }));
+}
+function clearUserSession(){
+  localStorage.removeItem(USER_SESSION_KEY);
+}
+function showAccountBar(){
+  const bar = document.getElementById('accountBar');
+  const nameEl = document.getElementById('accountName');
+  if(!bar || !currentUser) return;
+  nameEl.textContent = currentUser.name || '';
+  bar.style.display = 'flex';
+}
+document.getElementById('logoutUserBtn').addEventListener('click', () => {
+  clearUserSession();
+  currentUser = null;
+  location.reload();
+});
+
+async function restoreUserSession(){
+  const saved = localStorage.getItem(USER_SESSION_KEY);
+  if(!saved) return;
+  let parsed;
+  try{ parsed = JSON.parse(saved); }catch(e){ clearUserSession(); return; }
+  if(!parsed || !parsed.whatsapp || !parsed.password_hash) { clearUserSession(); return; }
+  try{
+    const { data, error } = await sb.from('tm_applicants')
+      .select('name,whatsapp,password_hash,zones,zones_sub,survey_completed,applied_tuition_code,is_banned')
+      .eq('whatsapp', parsed.whatsapp)
+      .limit(1);
+    if(error) throw error;
+    const user = data && data[0];
+    if(!user || user.password_hash !== parsed.password_hash){ clearUserSession(); return; }
+    currentUser = {
+      whatsapp: user.whatsapp, name: user.name, zones: user.zones || [], zonesSub: user.zones_sub || [],
+      surveyCompleted: !!user.survey_completed,
+      isBanned: !!user.is_banned,
+      appliedRealCodes: new Set(user.applied_tuition_code ? [user.applied_tuition_code] : []),
+      password_hash: parsed.password_hash
+    };
+    showAccountBar();
+    enterPostSignupView();
+  }catch(err){
+    console.error('session restore failed:', err);
+  }
+}
+
+/* ================= POST-SIGNUP VIEW ================= */
+let surveyScrollObserver = null;
+async function enterPostSignupView(){
+  // A fully-banned tutor never sees real, admin-posted tuitions again — not
+  // even if his survey was completed long ago. He only ever sees the
+  // randomly-generated placeholder cards, same as someone who hasn't
+  // finished the survey yet. This check comes before the surveyCompleted
+  // check on purpose so a ban always wins.
+  if(currentUser && currentUser.isBanned){
+    renderPlaceholderPostSignupView();
+    return;
+  }
+  // once the survey is completed, the user only ever sees real, admin-posted
+  // tuitions. Until then they keep seeing the randomly-generated placeholder
+  // tuitions (now with location revealed) to encourage them to finish the survey.
+  if(currentUser && currentUser.surveyCompleted){
+    renderRealTuitions();
+    return;
+  }
+  renderPlaceholderPostSignupView();
+}
+
+async function renderPlaceholderPostSignupView(){
+  document.getElementById('tuitions1').style.display = 'none';
+  document.getElementById('tuitions2').style.display = 'none';
+  const postSection = document.getElementById('postSignup');
+  const postList = document.getElementById('postSignupList');
+  const postTitle = document.getElementById('postSignupTitle');
+  if(postTitle) postTitle.textContent = 'আপনাকে দেখানো টিউশনসমূহ';
+  postList.innerHTML = shownTuitions.map(t => cardHTML(t, {revealLocation:true, action:'profile'})).join("");
+  postSection.style.display = 'block';
+  setupSurveyScrollTrigger(postList);
+
+  // A banned tutor must never see a real guardian number either — a full
+  // ban means no assigned-tuition lookups at all, ever.
+  if(currentUser && currentUser.isBanned){
+    updateGuardianFab([]);
+    return;
+  }
+
+  // A tutor can be given a guardian number (via Son of Anton) at any point —
+  // including before they've finished the survey — so this has to be fetched
+  // and shown here too, not only in the post-survey renderRealTuitions() path.
+  // Previously this branch never called fetchAssignedTuitions() at all, which
+  // is why a tutor who'd already been given a number still saw nothing.
+  const assigned = await fetchAssignedTuitions();
+  if(assigned.length){
+    const assignedHtml = assigned.map(function(t){ return assignedCardHTML(t); }).join('');
+    postList.innerHTML = assignedHtml + postList.innerHTML;
+    wireAssignedCardButtons();
+    assigned.forEach(function(t){ if(!t.seen_by_tutor) markTuitionSeen(t.id); });
+  }
+  updateGuardianFab();
+}
+
+function setupSurveyScrollTrigger(postList){
+  if(surveyScrollObserver){ surveyScrollObserver.disconnect(); surveyScrollObserver = null; }
+  const idx = Math.min(4, postList.children.length - 1);
+  const target = postList.children[idx];
+  if(!target) return;
+  surveyScrollObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting && currentUser && !currentUser.surveyCompleted && !surveyOverlay.classList.contains('open')){
+        openSurveyModal();
+        surveyScrollObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.4 });
+  surveyScrollObserver.observe(target);
+}
+
+/* ================= SIGNUP / SIGNIN MODAL ================= */
+const overlay = document.getElementById('overlay');
+const steps = Array.from(document.querySelectorAll('.step'));
+const progressBar = document.getElementById('progressBar');
+const modalEyebrow = document.getElementById('modalEyebrow');
+const switchModeWrap = document.getElementById('switchModeWrap');
+const switchModeBtn = document.getElementById('switchModeBtn');
+const switchModeText = document.getElementById('switchModeText');
+
+let currentStep = 0;
+let mode = 'signup'; // signup | signin
+let appliedCode = null;
+const stepOrder = [0,1,2,3,4,5];
+const answers = {};
+
+function openSignupModal(code){
+  appliedCode = code || null;
+  mode = 'signup';
+  currentStep = 0;
+  answers.university = ''; answers.year=''; answers.zones=[]; answers.zonesSub=[];
+  document.querySelectorAll('#signupForm .choice-btn.selected').forEach(b=>b.classList.remove('selected'));
+  document.querySelectorAll('.err-msg').forEach(e=>e.textContent='');
+  document.getElementById('signupForm').reset();
+  document.getElementById('zoneSubWrap').style.display='none';
+  document.querySelector('[data-step="4"] [data-next]').disabled = true;
+  document.querySelector('[data-step="3"] [data-next]').disabled = true;
+  showModeSignup();
+  overlay.classList.add('open');
+}
+function closeModal(){ overlay.classList.remove('open'); }
+document.getElementById('modalClose').addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if(e.target === overlay) closeModal(); });
+
+function showStep(stepKey){
+  steps.forEach(s => s.classList.toggle('active', s.dataset.step === String(stepKey)));
+}
+function updateProgress(){
+  const pct = Math.round(((stepOrder.indexOf(currentStep)+1) / stepOrder.length) * 100);
+  progressBar.style.width = pct + "%";
+}
+
+function showModeSignup(){
+  mode = 'signup';
+  modalEyebrow.textContent = 'আবেদন করুন';
+  switchModeWrap.style.display = 'block';
+  switchModeText.textContent = 'আগে থেকেই অ্যাকাউন্ট আছে? ';
+  switchModeBtn.textContent = 'সাইন ইন করুন';
+  progressBar.parentElement.style.display='block';
+  currentStep = 0;
+  showStep(0); updateProgress();
+}
+function showModeSignin(){
+  mode = 'signin';
+  modalEyebrow.textContent = 'সাইন ইন করুন';
+  switchModeWrap.style.display = 'block';
+  switchModeText.textContent = 'নতুন? ';
+  switchModeBtn.textContent = 'আবেদন করুন';
+  progressBar.parentElement.style.display='none';
+  showStep('signin');
+}
+switchModeBtn.addEventListener('click', () => {
+  if(mode === 'signup') showModeSignin(); else showModeSignup();
+});
+
+// tuition cards trigger modal (delegated, works for both pre- and post-signup lists)
+document.body.addEventListener('click', e => {
+  if(!e.target.classList.contains('apply-btn')) return;
+  const action = e.target.dataset.action;
+  const code = e.target.dataset.code;
+  if(action === 'real'){
+    applyToRealTuition(code, e.target);
+  } else if(action === 'profile'){
+    openProfileModal(code);
+  } else {
+    openSignupModal(code);
+  }
+});
+
+// build zone choice buttons (multi-select) — signup step
+const zoneChoices = document.getElementById('zoneChoices');
+const zoneSubWrap = document.getElementById('zoneSubWrap');
+const zoneSubChoices = document.getElementById('zoneSubChoices');
+
+function buildZoneMulti(mainWrap, subWrap, subChoicesWrap, state, onChange){
+  mainWrap.innerHTML = '';
+  ZONES.forEach(z => {
+    const btn = document.createElement('button');
+    btn.type='button'; btn.className='choice-btn'; btn.dataset.val = z.name;
+    btn.textContent = z.name;
+    btn.addEventListener('click', () => {
+      const idx = state.zones.indexOf(z.name);
+      if(idx === -1){ state.zones.push(z.name); btn.classList.add('selected'); }
+      else { state.zones.splice(idx,1); btn.classList.remove('selected'); }
+
+      if(z.sub){
+        if(state.zones.includes(z.name)){
+          subWrap.style.display='block';
+          subChoicesWrap.innerHTML = '';
+          z.sub.forEach(s => {
+            const sb2 = document.createElement('button');
+            sb2.type='button'; sb2.className='choice-btn';
+            sb2.textContent = s;
+            if(state.zonesSub.includes(s)) sb2.classList.add('selected');
+            sb2.addEventListener('click', () => {
+              const sIdx = state.zonesSub.indexOf(s);
+              if(sIdx === -1){ state.zonesSub.push(s); sb2.classList.add('selected'); }
+              else { state.zonesSub.splice(sIdx,1); sb2.classList.remove('selected'); }
+              onChange();
+            });
+            subChoicesWrap.appendChild(sb2);
+          });
+        } else {
+          subWrap.style.display='none';
+          state.zonesSub = state.zonesSub.filter(s => !z.sub.includes(s));
+        }
+      }
+      onChange();
+    });
+    mainWrap.appendChild(btn);
+  });
+}
+
+buildZoneMulti(zoneChoices, zoneSubWrap, zoneSubChoices, answers, () => {
+  const nextBtn = document.querySelector('[data-step="4"] [data-next]');
+  nextBtn.disabled = answers.zones.length === 0;
+});
+
+// university choice
+document.getElementById('uniChoices').addEventListener('click', e => {
+  if(!e.target.classList.contains('choice-btn')) return;
+  document.querySelectorAll('#uniChoices .choice-btn').forEach(b=>b.classList.remove('selected'));
+  e.target.classList.add('selected');
+  answers.university = e.target.dataset.val;
+  document.getElementById('f_uni_other').value = '';
+});
+document.getElementById('f_uni_other').addEventListener('input', e => {
+  if(e.target.value.trim()){
+    document.querySelectorAll('#uniChoices .choice-btn').forEach(b=>b.classList.remove('selected'));
+    answers.university = e.target.value.trim();
+  }
+});
+
+// year choice
+document.getElementById('yearChoices').addEventListener('click', e => {
+  if(!e.target.classList.contains('choice-btn')) return;
+  document.querySelectorAll('#yearChoices .choice-btn').forEach(b=>b.classList.remove('selected'));
+  e.target.classList.add('selected');
+  answers.year = e.target.dataset.val;
+  document.querySelector('[data-step="3"] [data-next]').disabled = false;
+});
+
+function stepErr(stepIdx, msg){
+  const el = document.querySelector(`[data-step="${stepIdx}"] .err-msg`);
+  if(el) el.textContent = msg;
+}
+
+function validateStep(stepIdx){
+  stepErr(stepIdx,'');
+  if(stepIdx === 0){
+    const v = document.getElementById('f_name').value.trim();
+    if(v.length < 2){ stepErr(0,'অনুগ্রহ করে আপনার নাম লিখুন।'); return false; }
+    answers.name = v; return true;
+  }
+  if(stepIdx === 1){
+    const v = document.getElementById('f_wa').value.trim();
+    if(!isValidBDPhone(v)){ stepErr(1,'সঠিক হোয়াটসঅ্যাপ নম্বর দিন (যেমনঃ 017XXXXXXXX অথবা +8801XXXXXXXXX)।'); return false; }
+    answers.whatsapp = normalizeBDPhone(v); return true;
+  }
+  if(stepIdx === 2){
+    if(!answers.university){ stepErr(2,'একটি বিশ্ববিদ্যালয় নির্বাচন করুন বা লিখুন।'); return false; }
+    return true;
+  }
+  if(stepIdx === 3){
+    if(!answers.year){ stepErr(3,'আপনার বর্ষ নির্বাচন করুন।'); return false; }
+    return true;
+  }
+  if(stepIdx === 4){
+    if(!answers.zones.length){ stepErr(4,'অন্তত একটি এলাকা নির্বাচন করুন।'); return false; }
+    if(answers.zones.includes('হালিশহর') && !answers.zonesSub.length){ stepErr(4,'অনুগ্রহ করে নির্দিষ্ট এলাকা নির্বাচন করুন।'); return false; }
+    return true;
+  }
+  return true;
+}
+
+document.querySelectorAll('#signupForm [data-next]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const stepEl = btn.closest('.step');
+    const idx = stepEl.dataset.step;
+    if(idx === '5') return; // handled separately
+    const numIdx = Number(idx);
+    if(!validateStep(numIdx)) return;
+    const pos = stepOrder.indexOf(numIdx);
+    currentStep = stepOrder[pos+1];
+    showStep(currentStep);
+    updateProgress();
+  });
+});
+
+async function sha256Hex(text){
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+document.getElementById('submitBtn').addEventListener('click', async () => {
+  const passEl = document.getElementById('f_pass');
+  const pass = passEl.value;
+  if(pass.length < 4){ stepErr(5,'পাসওয়ার্ড কমপক্ষে ৪ অক্ষরের হতে হবে।'); return; }
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true; submitBtn.textContent = 'পাঠানো হচ্ছে...';
+  try{
+    const password_hash = await sha256Hex(pass);
+    const { error } = await sb.from('tm_applicants').insert({
+      name: answers.name,
+      whatsapp: answers.whatsapp,
+      university: answers.university,
+      year: answers.year,
+      zones: answers.zones,
+      zones_sub: answers.zonesSub,
+      password_hash,
+      applied_tuition_code: appliedCode
+    });
+    if(error) throw error;
+    currentUser = { whatsapp: answers.whatsapp, name: answers.name, zones: answers.zones.slice(), zonesSub: answers.zonesSub.slice(), surveyCompleted: false, isBanned: false, password_hash };
+    saveUserSession();
+    showAccountBar();
+    closeModal();
+    enterPostSignupView();
+  }catch(err){
+    stepErr(5, 'দুঃখিত, কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+    console.error(err);
+  }finally{
+    submitBtn.disabled = false; submitBtn.textContent = 'আবেদন সম্পন্ন করুন';
+  }
+});
+
+document.getElementById('signinBtn').addEventListener('click', async () => {
+  const waRaw = document.getElementById('si_wa').value.trim();
+  const pass = document.getElementById('si_pass').value;
+  const errEl = document.getElementById('signinErr');
+  errEl.textContent = '';
+  if(!waRaw || !pass){ errEl.textContent = 'নম্বর ও পাসওয়ার্ড দিন।'; return; }
+  if(!isValidBDPhone(waRaw)){ errEl.textContent = 'সঠিক হোয়াটসঅ্যাপ নম্বর দিন (যেমনঃ 017XXXXXXXX অথবা +8801XXXXXXXXX)।'; return; }
+  const wa = normalizeBDPhone(waRaw);
+  try{
+    const password_hash = await sha256Hex(pass);
+    const { data, error } = await sb.from('tm_applicants')
+      .select('name,whatsapp,password_hash,zones,zones_sub,survey_completed,applied_tuition_code,is_banned')
+      .eq('whatsapp', wa)
+      .limit(1);
+    if(error) throw error;
+    const user = data && data[0];
+    if(!user || user.password_hash !== password_hash){
+      errEl.textContent = 'নম্বর অথবা পাসওয়ার্ড সঠিক নয়।';
+      return;
+    }
+    currentUser = {
+      whatsapp: user.whatsapp, name: user.name, zones: user.zones || [], zonesSub: user.zones_sub || [],
+      surveyCompleted: !!user.survey_completed,
+      isBanned: !!user.is_banned,
+      appliedRealCodes: new Set(user.applied_tuition_code ? [user.applied_tuition_code] : []),
+      password_hash
+    };
+    saveUserSession();
+    showAccountBar();
+    document.getElementById('doneMsg').textContent = `স্বাগতম, ${user.name}! আপনি সফলভাবে সাইন ইন করেছেন।`;
+    switchModeWrap.style.display='none';
+    showStep('done');
+    enterPostSignupView();
+  }catch(err){
+    errEl.textContent = 'সমস্যা হয়েছে, আবার চেষ্টা করুন।';
+    console.error(err);
+  }
+});
+
+/* ================= PROFILE UPDATE MODAL ================= */
+const profileOverlay = document.getElementById('profileOverlay');
+const profileZoneChoices = document.getElementById('profileZoneChoices');
+const profileZoneSubWrap = document.getElementById('profileZoneSubWrap');
+const profileZoneSubChoices = document.getElementById('profileZoneSubChoices');
+const profileState = { zones: [], zonesSub: [] };
+
+buildZoneMulti(profileZoneChoices, profileZoneSubWrap, profileZoneSubChoices, profileState, () => {
+  document.getElementById('profileSubmitBtn').disabled = profileState.zones.length === 0;
+});
+
+function openProfileModal(code){
+  pendingApplyCode = code || null;
+  profileState.zones = currentUser ? currentUser.zones.slice() : [];
+  profileState.zonesSub = currentUser ? currentUser.zonesSub.slice() : [];
+  buildZoneMulti(profileZoneChoices, profileZoneSubWrap, profileZoneSubChoices, profileState, () => {
+    document.getElementById('profileSubmitBtn').disabled = profileState.zones.length === 0;
+  });
+  // reflect pre-selected state visually
+  Array.from(profileZoneChoices.children).forEach(btn => {
+    if(profileState.zones.includes(btn.dataset.val)) btn.classList.add('selected');
+  });
+  const halishahar = ZONES.find(z => z.name === 'হালিশহর');
+  if(halishahar && profileState.zones.includes('হালিশহর')){
+    profileZoneSubWrap.style.display = 'block';
+    profileZoneSubChoices.innerHTML = '';
+    halishahar.sub.forEach(s => {
+      const sb2 = document.createElement('button');
+      sb2.type='button'; sb2.className='choice-btn';
+      sb2.textContent = s;
+      if(profileState.zonesSub.includes(s)) sb2.classList.add('selected');
+      sb2.addEventListener('click', () => {
+        const sIdx = profileState.zonesSub.indexOf(s);
+        if(sIdx === -1){ profileState.zonesSub.push(s); sb2.classList.add('selected'); }
+        else { profileState.zonesSub.splice(sIdx,1); sb2.classList.remove('selected'); }
+      });
+      profileZoneSubChoices.appendChild(sb2);
+    });
+  }
+  document.getElementById('profileFormWrap').style.display = 'block';
+  document.getElementById('profileSuccess').style.display = 'none';
+  document.getElementById('profileErr').textContent = '';
+  document.getElementById('profileSubmitBtn').disabled = profileState.zones.length === 0;
+  profileOverlay.classList.add('open');
+}
+document.getElementById('profileModalClose').addEventListener('click', () => profileOverlay.classList.remove('open'));
+profileOverlay.addEventListener('click', e => { if(e.target === profileOverlay) profileOverlay.classList.remove('open'); });
+
+document.getElementById('profileSubmitBtn').addEventListener('click', async () => {
+  const errEl = document.getElementById('profileErr');
+  errEl.textContent = '';
+  if(!currentUser){ errEl.textContent = 'অনুগ্রহ করে প্রথমে আবেদন করুন।'; return; }
+  if(!profileState.zones.length){ errEl.textContent = 'অন্তত একটি এলাকা নির্বাচন করুন।'; return; }
+  if(profileState.zones.includes('হালিশহর') && !profileState.zonesSub.length){ errEl.textContent = 'নির্দিষ্ট এলাকা নির্বাচন করুন।'; return; }
+  const btn = document.getElementById('profileSubmitBtn');
+  btn.disabled = true; btn.textContent = 'আপডেট হচ্ছে...';
+  try{
+    const { error } = await sb.from('tm_applicants')
+      .update({ zones: profileState.zones, zones_sub: profileState.zonesSub, applied_tuition_code: pendingApplyCode })
+      .eq('whatsapp', currentUser.whatsapp);
+    if(error) throw error;
+    currentUser.zones = profileState.zones.slice();
+    currentUser.zonesSub = profileState.zonesSub.slice();
+    if(!currentUser.surveyCompleted){
+      profileOverlay.classList.remove('open');
+      openSurveyModal();
+    } else {
+      document.getElementById('profileFormWrap').style.display = 'none';
+      document.getElementById('profileSuccess').style.display = 'block';
+    }
+  }catch(err){
+    errEl.textContent = 'দুঃখিত, কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।';
+    console.error(err);
+  }finally{
+    btn.disabled = false; btn.textContent = 'প্রোফাইল আপডেট করুন';
+  }
+});
+
+/* ================= EXTENDED SURVEY ================= */
+const surveyOverlay = document.getElementById('surveyOverlay');
+const surveyStepsWrap = document.getElementById('surveyStepsWrap');
+const surveyProgressBar = document.getElementById('surveyProgressBar');
+const surveyNextBtn = document.getElementById('surveyNextBtn');
+const surveyBackBtn = document.getElementById('surveyBackBtn');
+const surveyErr = document.getElementById('surveyErr');
+
+const SURVEY_STEPS = [
+  { key:'gender', type:'single', label:'আপনার জেন্ডার কী?',
+    options:[{val:'male',label:'পুরুষ'},{val:'female',label:'মহিলা'}] },
+  { key:'department', type:'text', label:'আপনি কোন ডিপার্টমেন্টে পড়েন?', placeholder:'যেমনঃ CSE' },
+  { key:'current_location', type:'text', label:'আপনার বর্তমান লোকেশন কোথায়?', placeholder:'যেমনঃ আগ্রাবাদ, চট্টগ্রাম' },
+  { key:'teaching_mediums', type:'multi', label:'আপনি কোন মাধ্যমের শিক্ষার্থী পড়াতে চান?', hint:'একাধিক নির্বাচন করা যাবে',
+    options:[
+      {val:'bangla_medium',label:'বাংলা মাধ্যম'},
+      {val:'national_curriculum',label:'ন্যাশনাল কারিকুলাম'},
+      {val:'british_curriculum',label:'ব্রিটিশ কারিকুলাম'},
+      {val:'arabic_subjects',label:'আরবি বিষয়সমূহ'}
+    ] },
+  { key:'current_tuition_count', type:'single', label:'আপনি বর্তমানে কয়টি টিউশন করান?', hint:'টিউশন লাইফে নতুন হলেও সমস্যা নেই',
+    options:['0','1','2','3','4','5+'].map(v=>({val:v,label:v})) },
+  { key:'religion', type:'single', label:'আপনার ধর্ম কী?',
+    options:[
+      {val:'muslim',label:'মুসলিম'},{val:'hindu',label:'হিন্দু'},{val:'buddhist',label:'বৌদ্ধ'},
+      {val:'christian',label:'খ্রিস্টান'},{val:'ethnic_religion',label:'আদিবাসী ধর্ম'}
+    ] },
+  { key:'is_chittagong_local', type:'yesno', label:'আপনি কি চট্টগ্রামের স্থানীয়?' },
+  { key:'min_salary_expected', type:'number', label:'আপনি সর্বনিম্ন কত টাকা বেতনের টিউশন করাবেন?', hint:'যেমনঃ ২০০০ টাকা', placeholder:'২০০০' },
+  { key:'max_salary_expected', type:'number', label:'আপনি সর্বোচ্চ কত টাকার টিউশন আমাদের থেকে পাবেন বলে আশা করেন?', hint:'যেমনঃ ৭০০০ টাকা', placeholder:'৭০০০' },
+  { key:'poor_student_min_charge', type:'dynamic-single',
+    label:'একটি গরিব শিক্ষার্থী আপনার বাসার একদম কাছে হলে, আপনি তাকে সর্বনিম্ন কত টাকা হলেও পড়াবেন?',
+    buildOptions: (a) => {
+      const base = Number(a.min_salary_expected) || 0;
+      const y = Math.round(base * 0.75);
+      const z = Math.round(base * 0.5);
+      return [
+        {val:String(y), tier:'discount_25', label:`২৫% ছাড় — ৳${y}`},
+        {val:String(z), tier:'discount_50', label:`৫০% ছাড় — ৳${z}`}
+      ];
+    } },
+  { key:'transportation_mode', type:'single', label:'আপনি সাধারণত কিসের মাধ্যমে যাতায়াত করেন?',
+    options:[
+      {val:'uber_pathao',label:'উবার / পাঠাও'},
+      {val:'own_vehicle',label:'নিজের বাইক / কার'},
+      {val:'rickshaw',label:'রিকশা'},
+      {val:'cng',label:'সিএনজি'},
+      {val:'local_bus',label:'লোকাল বাস'}
+    ] },
+  { key:'ordered_food_delivery_4months', type:'yesno', label:'আপনি কি শেষ ৪ মাসে অনলাইন মাধ্যম (ফুডপান্ডা/পাঠাও) থেকে খাবার অর্ডার করেছেন?' },
+  { key:'ssc_gpa', type:'number', step:'0.01', label:'SSC পরীক্ষায় আপনার GPA কত ছিল?', placeholder:'৫.০০' },
+  { key:'self_studied_with_tutor_ssc_hsc', type:'yesno', label:'SSC/HSC পরীক্ষার সময় আপনি কি নিজে বাসায় গৃহশিক্ষক রেখে পড়েছেন?' },
+  { key:'parents_phone', type:'tel', label:'আপনার বাবা/মায়ের ফোন নম্বর দিন', hint:'01XXXXXXXXX অথবা +8801XXXXXXXXX ফরম্যাটে লিখুন', placeholder:'01XXXXXXXXX' },
+  { key:'desired_monthly_earning', type:'number', label:'তুমি টিউশন করে মাসে সর্বোচ্চ কত টাকা earn করতে চাও?', placeholder:'১০০০০' },
+  { key:'desired_tuition_count', type:'single', label:'তুমি সর্বোচ্চ কয়টি টিউশন করাতে চাও?',
+    options:['1','2','3','4','5+'].map(v=>({val:v,label:v})) },
+  { key:'monthly_personal_expense', type:'number', label:'তোমার প্রতি মাসে ব্যক্তিগত হাতখরচ কত টাকা?', placeholder:'৩০০০' },
+  { key:'current_income_source', type:'multi', label:'এই টাকা তুমি এখন কিভাবে পাও?', hint:'একাধিক নির্বাচন করা যাবে',
+    options:[
+      {val:'family_support',label:'বাসা থেকে নেই'},
+      {val:'tuition_income',label:'টিউশন করে earn করি'},
+      {val:'side_business',label:'সাইড বিজনেস করে earn করি'}
+    ] },
+  { key:'tuition_main_goal', type:'single', label:'টিউশন করানোর পিছনে তোমার মূল লক্ষ্য কী?',
+    options:[
+      {val:'personal_expense',label:'নিজের হাতখরচ নিজে ম্যানেজ করা'},
+      {val:'family_support',label:'পরিবারকে financially সাপোর্ট করা'},
+      {val:'travel',label:'ট্যুর দেওয়া'},
+      {val:'chill',label:'চিল করা'},
+      {val:'dream_purchase',label:'স্বপ্নের গ্যাজেট/প্রোডাক্ট কেনা'}
+    ] },
+  { key:'family_supports_tuition', type:'yesno', label:'টিউশন করানো তোমার family সাপোর্ট করবে?' },
+  { key:'self_traits', type:'text', label:'নিজেকে বর্ণনা করে এমন ৩টি বৈশিষ্ট্য লিখো', hint:'কমা দিয়ে আলাদা করে লিখো — যেমনঃ পরিশ্রমী, ধৈর্যশীল, সৃজনশীল', placeholder:'বৈশিষ্ট্য ১, বৈশিষ্ট্য ২, বৈশিষ্ট্য ৩' },
+  { key:'proud_of', type:'textarea', label:'তুমি নিজের কোন বিষয় নিয়ে সবচেয়ে বেশি গর্বিত?', hint:'ছোট করে লিখলেই হবে', placeholder:'যেমনঃ আমি...' },
+  { key:'extracurricular_activities', type:'textarea', label:'তোমার কোনো এক্সট্রা-কারিকুলার এক্টিভিটি আছে কি?', hint:'যেমনঃ অলিম্পিয়াড পুরস্কার, খেলাধুলার পুরস্কার, স্কুল পর্যায়ের প্রতিযোগিতা, বই পড়া, কনটেন্ট ক্রিয়েশন — বা অন্য যা কিছু মনে হয় লিখো', placeholder:'তোমার এক্টিভিটিগুলো লিখো...' },
+  { key:'preferred_class_levels', type:'multi', label:'তুমি কোন ক্লাসের শিক্ষার্থী পড়াতে আগ্রহী?', hint:'একাধিক নির্বাচন করা যাবে',
+    options:[
+      {val:'class_1_5', label:'ক্লাস ১-৫'},
+      {val:'class_6_8', label:'ক্লাস ৬-৮'},
+      {val:'class_9', label:'ক্লাস ৯'},
+      {val:'class_10', label:'ক্লাস ১০'},
+      {val:'class_11', label:'ক্লাস ১১'},
+      {val:'class_12', label:'ক্লাস ১২'}
+    ] },
+  { key:'preferred_stream', type:'multi', label:'ক্লাস ৯-১২ এর কোন বিভাগের শিক্ষার্থী পড়াতে চাও?', hint:'একাধিক নির্বাচন করা যাবে',
+    shouldShow: (a) => Array.isArray(a.preferred_class_levels) && ['class_9','class_10','class_11','class_12'].some(v => a.preferred_class_levels.includes(v)),
+    options:[
+      {val:'science', label:'বিজ্ঞান'},
+      {val:'commerce', label:'কমার্স'},
+      {val:'arts', label:'আর্টস'}
+    ] }
+];
+
+let surveyIndex = 0;
+let surveyAnswers = {};
+
+function openSurveyModal(){
+  if(!currentUser) return;
+  surveyIndex = 0;
+  surveyAnswers = {};
+  surveyErr.textContent = '';
+  document.getElementById('surveyFormWrap').style.display = 'block';
+  renderSurveyStep();
+  surveyOverlay.classList.add('open');
+}
+
+function buildSurveyPayload(){
+  const p = {};
+  const set = (k, v) => { if(v !== undefined) p[k] = v; };
+  if('gender' in surveyAnswers) set('gender', surveyAnswers.gender);
+  if('department' in surveyAnswers) set('department', surveyAnswers.department);
+  if('current_location' in surveyAnswers) set('current_location', surveyAnswers.current_location);
+  if('teaching_mediums' in surveyAnswers) set('teaching_mediums', surveyAnswers.teaching_mediums || []);
+  if('current_tuition_count' in surveyAnswers) set('current_tuition_count', surveyAnswers.current_tuition_count);
+  if('religion' in surveyAnswers) set('religion', surveyAnswers.religion);
+  if('is_chittagong_local' in surveyAnswers) set('is_chittagong_local', surveyAnswers.is_chittagong_local);
+  if('min_salary_expected' in surveyAnswers) set('min_salary_expected', Number(surveyAnswers.min_salary_expected) || null);
+  if('max_salary_expected' in surveyAnswers) set('max_salary_expected', Number(surveyAnswers.max_salary_expected) || null);
+  if('poor_student_min_charge' in surveyAnswers) set('poor_student_min_charge', Number(surveyAnswers.poor_student_min_charge) || null);
+  if('poor_student_discount_tier' in surveyAnswers) set('poor_student_discount_tier', surveyAnswers.poor_student_discount_tier || null);
+  if('transportation_mode' in surveyAnswers) set('transportation_mode', surveyAnswers.transportation_mode);
+  if('ordered_food_delivery_4months' in surveyAnswers) set('ordered_food_delivery_4months', surveyAnswers.ordered_food_delivery_4months);
+  if('ssc_gpa' in surveyAnswers) set('ssc_gpa', Number(surveyAnswers.ssc_gpa) || null);
+  if('self_studied_with_tutor_ssc_hsc' in surveyAnswers) set('self_studied_with_tutor_ssc_hsc', surveyAnswers.self_studied_with_tutor_ssc_hsc);
+  if('parents_phone' in surveyAnswers) set('parents_phone', surveyAnswers.parents_phone);
+  if('desired_monthly_earning' in surveyAnswers) set('desired_monthly_earning', Number(surveyAnswers.desired_monthly_earning) || null);
+  if('desired_tuition_count' in surveyAnswers) set('desired_tuition_count', surveyAnswers.desired_tuition_count);
+  if('monthly_personal_expense' in surveyAnswers) set('monthly_personal_expense', Number(surveyAnswers.monthly_personal_expense) || null);
+  if('current_income_source' in surveyAnswers) set('current_income_source', surveyAnswers.current_income_source || []);
+  if('tuition_main_goal' in surveyAnswers) set('tuition_main_goal', surveyAnswers.tuition_main_goal);
+  if('family_supports_tuition' in surveyAnswers) set('family_supports_tuition', surveyAnswers.family_supports_tuition);
+  if('self_traits' in surveyAnswers) set('self_traits', surveyAnswers.self_traits);
+  if('proud_of' in surveyAnswers) set('proud_of', surveyAnswers.proud_of);
+  if('extracurricular_activities' in surveyAnswers) set('extracurricular_activities', surveyAnswers.extracurricular_activities);
+  if('preferred_class_levels' in surveyAnswers) set('preferred_class_levels', surveyAnswers.preferred_class_levels || []);
+  if('preferred_stream' in surveyAnswers) set('preferred_stream', surveyAnswers.preferred_stream || []);
+  return p;
+}
+
+// Saves whatever has been answered so far. Returns true only if a row was actually written.
+async function saveSurveyProgress(extra){
+  if(!currentUser) return false;
+  const payload = Object.assign(buildSurveyPayload(), extra || {});
+  if(Object.keys(payload).length === 0) return false;
+  const { data, error } = await sb.from('tm_applicants')
+    .update(payload)
+    .eq('whatsapp', currentUser.whatsapp)
+    .select('whatsapp');
+  if(error){ console.error('survey save error:', error); return false; }
+  if(!data || data.length === 0){ console.error('survey save matched 0 rows for whatsapp:', currentUser.whatsapp); return false; }
+  return true;
+}
+
+document.getElementById('surveyModalClose').addEventListener('click', () => {
+  surveyOverlay.classList.remove('open');
+  saveSurveyProgress();
+});
+surveyOverlay.addEventListener('click', e => {
+  if(e.target === surveyOverlay){
+    surveyOverlay.classList.remove('open');
+    saveSurveyProgress();
+  }
+});
+
+function isStepVisible(step){ return !step.shouldShow || step.shouldShow(surveyAnswers); }
+function totalVisibleSteps(){ return SURVEY_STEPS.filter(isStepVisible).length; }
+function visibleStepsUpTo(idx){ return SURVEY_STEPS.slice(0, idx + 1).filter(isStepVisible).length; }
+function lastVisibleIndex(){
+  for(let i = SURVEY_STEPS.length - 1; i >= 0; i--){ if(isStepVisible(SURVEY_STEPS[i])) return i; }
+  return SURVEY_STEPS.length - 1;
+}
+function firstVisibleIndexBefore(idx){
+  let i = idx - 1;
+  while(i >= 0 && !isStepVisible(SURVEY_STEPS[i])) i--;
+  return i;
+}
+function firstVisibleIndexAfter(idx){
+  let i = idx + 1;
+  while(i < SURVEY_STEPS.length && !isStepVisible(SURVEY_STEPS[i])) i++;
+  return i;
+}
+// drop answers belonging to steps that are no longer applicable (e.g. stream chosen, then SSC/HSC deselected)
+function purgeHiddenStepAnswers(){
+  SURVEY_STEPS.forEach(s => { if(s.shouldShow && !s.shouldShow(surveyAnswers)) delete surveyAnswers[s.key]; });
+}
+
+function isSurveyStepAnswered(step){
+  const v = surveyAnswers[step.key];
+  if(step.type === 'multi') return Array.isArray(v) && v.length > 0;
+  if(step.type === 'tel') return typeof v === 'string' && isValidBDPhone(v);
+  if(step.type === 'text' || step.type === 'textarea') return typeof v === 'string' && v.trim().length > 0;
+  if(step.type === 'number') return v !== undefined && v !== null && String(v).trim() !== '' && !isNaN(v);
+  if(step.type === 'yesno') return v === true || v === false;
+  if(step.type === 'single' || step.type === 'dynamic-single') return v !== undefined && v !== null && v !== '';
+  return true;
+}
+
+function renderSurveyStep(){
+  const step = SURVEY_STEPS[surveyIndex];
+  surveyErr.textContent = '';
+  const pct = Math.round((visibleStepsUpTo(surveyIndex) / totalVisibleSteps()) * 100);
+  surveyProgressBar.style.width = pct + '%';
+  surveyBackBtn.style.display = firstVisibleIndexBefore(surveyIndex) < 0 ? 'none' : 'block';
+  surveyNextBtn.textContent = surveyIndex === lastVisibleIndex() ? 'সম্পন্ন করুন' : 'পরবর্তী';
+
+  let inner = `<label>${step.label}</label>`;
+  if(step.hint) inner += `<div class="step-hint">${step.hint}</div>`;
+
+  if(step.type === 'text' || step.type === 'tel'){
+    const val = surveyAnswers[step.key] || '';
+    inner += `<input type="${step.type === 'tel' ? 'tel' : 'text'}" id="surveyInput" placeholder="${step.placeholder||''}" value="${val}">`;
+  } else if(step.type === 'textarea'){
+    const rawVal = surveyAnswers[step.key] || '';
+    const val = rawVal.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    inner += `<div class="textarea-wrap"><textarea id="surveyInput" rows="4" placeholder="${step.placeholder||''}">${val}</textarea><span class="textarea-count" id="surveyCharCount">${rawVal.length} অক্ষর</span></div>`;
+  } else if(step.type === 'number'){
+    const val = surveyAnswers[step.key] ?? '';
+    inner += `<input type="number" id="surveyInput" ${step.step?`step="${step.step}"`:''} min="0" placeholder="${step.placeholder||''}" value="${val}">`;
+  } else if(step.type === 'single'){
+    inner += `<div class="choice-grid single" id="surveyChoiceWrap">` +
+      step.options.map(o => `<button type="button" class="choice-btn${surveyAnswers[step.key]===o.val?' selected':''}" data-val="${o.val}">${o.label}</button>`).join('') +
+      `</div>`;
+  } else if(step.type === 'dynamic-single'){
+    const opts = step.buildOptions(surveyAnswers);
+    inner += `<div class="choice-grid single" id="surveyChoiceWrap">` +
+      opts.map(o => `<button type="button" class="choice-btn${surveyAnswers[step.key]===o.val?' selected':''}" data-val="${o.val}" data-tier="${o.tier}">${o.label}</button>`).join('') +
+      `</div>`;
+  } else if(step.type === 'multi'){
+    const cur = surveyAnswers[step.key] || [];
+    inner += `<div class="choice-grid single" id="surveyChoiceWrap">` +
+      step.options.map(o => `<button type="button" class="choice-btn${cur.includes(o.val)?' selected':''}" data-val="${o.val}">${o.label}</button>`).join('') +
+      `</div>`;
+  } else if(step.type === 'yesno'){
+    const cur = surveyAnswers[step.key];
+    inner += `<div class="choice-grid" id="surveyChoiceWrap">
+      <button type="button" class="choice-btn${cur===true?' selected':''}" data-val="yes">হ্যাঁ</button>
+      <button type="button" class="choice-btn${cur===false?' selected':''}" data-val="no">না</button>
+    </div>`;
+  }
+  inner += `<div class="err-msg" id="surveyStepErr"></div>`;
+  surveyStepsWrap.innerHTML = inner;
+
+  if(step.type === 'text' || step.type === 'tel' || step.type === 'number' || step.type === 'textarea'){
+    document.getElementById('surveyInput').addEventListener('input', e => {
+      surveyAnswers[step.key] = e.target.value;
+      if(step.type === 'textarea'){
+        const counter = document.getElementById('surveyCharCount');
+        if(counter) counter.textContent = e.target.value.length + ' অক্ষর';
+      }
+    });
+  } else if(step.type === 'yesno'){
+    document.getElementById('surveyChoiceWrap').querySelectorAll('.choice-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        surveyAnswers[step.key] = btn.dataset.val === 'yes';
+        document.getElementById('surveyChoiceWrap').querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('selected'));
+        btn.classList.add('selected');
+      });
+    });
+  } else if(step.type === 'multi'){
+    document.getElementById('surveyChoiceWrap').querySelectorAll('.choice-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cur = surveyAnswers[step.key] || [];
+        const idx = cur.indexOf(btn.dataset.val);
+        if(idx === -1){ cur.push(btn.dataset.val); btn.classList.add('selected'); }
+        else { cur.splice(idx,1); btn.classList.remove('selected'); }
+        surveyAnswers[step.key] = cur;
+        purgeHiddenStepAnswers();
+      });
+    });
+  } else if(step.type === 'single' || step.type === 'dynamic-single'){
+    document.getElementById('surveyChoiceWrap').querySelectorAll('.choice-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        surveyAnswers[step.key] = btn.dataset.val;
+        if(step.type === 'dynamic-single') surveyAnswers.poor_student_discount_tier = btn.dataset.tier;
+        document.getElementById('surveyChoiceWrap').querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('selected'));
+        btn.classList.add('selected');
+      });
+    });
+  }
+}
+
+surveyBackBtn.addEventListener('click', () => {
+  const prev = firstVisibleIndexBefore(surveyIndex);
+  if(prev < 0) return;
+  surveyIndex = prev;
+  renderSurveyStep();
+});
+
+surveyNextBtn.addEventListener('click', async () => {
+  const step = SURVEY_STEPS[surveyIndex];
+  if(!isSurveyStepAnswered(step)){
+    const msg = (step.type === 'tel' && (surveyAnswers[step.key]||'').trim())
+      ? 'সঠিক ফোন নম্বর দিন (যেমনঃ 017XXXXXXXX অথবা +8801XXXXXXXXX)।'
+      : 'অনুগ্রহ করে এই প্রশ্নের উত্তর দিন।';
+    document.getElementById('surveyStepErr').textContent = msg;
+    return;
+  }
+  if(step.type === 'tel') surveyAnswers[step.key] = normalizeBDPhone(surveyAnswers[step.key]);
+  if(surveyIndex !== lastVisibleIndex()){
+    surveyNextBtn.disabled = true;
+    await saveSurveyProgress();
+    surveyNextBtn.disabled = false;
+    surveyIndex = firstVisibleIndexAfter(surveyIndex);
+    renderSurveyStep();
+    return;
+  }
+  // last visible step -> final submit
+  surveyNextBtn.disabled = true; surveyNextBtn.textContent = 'জমা হচ্ছে...';
+  try{
+    const ok = await saveSurveyProgress({ survey_completed: true });
+    if(!ok) throw new Error('survey write did not affect any row - check RLS update policy / whatsapp match on tm_applicants');
+    currentUser.surveyCompleted = true;
+    surveyOverlay.classList.remove('open');
+    await renderRealTuitions();
+    const target = document.getElementById('postSignup');
+    if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }catch(err){
+    surveyErr.textContent = 'দুঃখিত, কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।';
+    console.error(err);
+  }finally{
+    surveyNextBtn.disabled = false;
+    surveyNextBtn.textContent = surveyIndex === lastVisibleIndex() ? 'সম্পন্ন করুন' : 'পরবর্তী';
+  }
+});
+
+restoreUserSession();
+
+</script>
+</body>
+</html>
