@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" id="viewportMeta">
 <title>Tuition O Job Media — Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Baloo+Da+2:wght@600;700;800&display=swap" rel="stylesheet">
@@ -200,6 +200,19 @@
   .pill.cancelled{background:#F5E7E4;color:#B5473B;border-color:#EAC9C2;}
   .pill.finished{background:#E0EAF5;color:#2A5C8A;border-color:#C4D9EE;}
   .pill.due{background:#FBF1D9;color:#8A6A16;border-color:#EFDBA0;}
+
+  /* assigned-to */
+  .assign-wrap{display:flex;flex-direction:column;gap:5px;min-width:150px;font-size:12.5px;}
+  .assign-emp-pill{
+    display:inline-flex;align-items:center;gap:6px;background:#E4F0E8;color:var(--teal-deep);
+    border:1px solid #BFDFC9;border-radius:999px;padding:3px 9px;font-size:12px;font-weight:600;width:fit-content;
+  }
+  .assign-emp-pill.locked{background:var(--bg);color:var(--ink-soft);border-color:var(--line);}
+  .assign-emp-pill .x{cursor:pointer;font-weight:700;color:#B5473B;}
+  .assign-row{display:flex;gap:5px;align-items:center;}
+  .assign-row select{padding:5px 7px;border-radius:8px;border:1.5px solid var(--line);font-size:12px;background:var(--surface);max-width:110px;}
+  .assign-row button{padding:5px 9px;border-radius:8px;border:1.5px solid var(--line);font-size:12px;font-weight:600;background:var(--surface);}
+  .perf-table td, .perf-table th{white-space:nowrap;}
   .row-actions{display:flex;gap:6px;}
   .icon-btn{
     padding:6px 12px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface);
@@ -340,6 +353,64 @@
   .chart-wrap canvas{max-height:280px;}
   .fin-summary-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px;}
   .fin-summary-row .stat{min-width:150px;}
+
+  /* ---- mobile friendliness ---- */
+  html{-webkit-text-size-adjust:100%;}
+  #dashboard{padding:18px 14px 90px;}
+  .dash-head{gap:10px;}
+  .dash-head-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .tabs{
+    flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;padding-bottom:2px;
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{flex:0 0 auto;white-space:nowrap;}
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+  .stat{min-width:0;padding:14px 16px;}
+  .stat .num{font-size:22px;}
+
+  @media(max-width:640px){
+    #dashboard{padding:14px 10px 90px;}
+    .dash-head h1{font-size:21px;}
+    .stats{grid-template-columns:repeat(2,1fr);gap:8px;}
+    .stat{padding:12px 12px;}
+    .stat .num{font-size:19px;}
+    .stat .label{font-size:11.5px;}
+    .toolbar{gap:8px;}
+    .toolbar input{min-width:100%;}
+    .toolbar select{flex:1;min-width:0;}
+    .toolbar button{flex:1;min-width:0;padding:10px 10px;font-size:13px;}
+    table{font-size:12.5px;}
+    th,td{padding:9px 10px;}
+    .tab-btn{padding:8px 15px;font-size:13px;}
+  }
+
+  /* ---- full width view toggle ---- */
+  .fw-fab{
+    position:fixed;right:16px;bottom:16px;z-index:400;
+    display:flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;border:none;
+    background:var(--teal-deep);color:#fff;font-size:13.5px;font-weight:700;
+    box-shadow:0 8px 22px rgba(28,74,62,0.35);
+  }
+  .fw-fab .fw-ic{font-size:16px;line-height:1;}
+  .fw-fab.active{background:var(--terracotta);box-shadow:0 8px 22px rgba(194,100,62,0.35);}
+  .fw-hint{
+    position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:400;
+    background:var(--teal-deep);color:#fff;font-size:12.5px;font-weight:600;
+    padding:8px 16px;border-radius:999px;box-shadow:var(--shadow);
+    opacity:0;pointer-events:none;transition:opacity .25s ease;
+  }
+  .fw-hint.show{opacity:1;}
+
+  body.fw-view{min-width:1400px;}
+  body.fw-view #dashboard{max-width:none;}
+  body.fw-view .tabs{flex-wrap:wrap;overflow-x:visible;}
+  body.fw-view .stats{display:flex;flex-wrap:wrap;}
+  body.fw-view .stat{min-width:150px;flex:1;}
+  body.fw-view .toolbar input{min-width:180px;}
+  body.fw-view .toolbar button{flex:0 0 auto;}
+  body.fw-view table{min-width:1500px;}
+  body.fw-view .table-wrap{overflow-x:visible;}
 </style>
 </head>
 <body>
@@ -357,12 +428,18 @@
 </div>
 
 <div id="dashboard">
+  <div class="fw-hint" id="fwHint">Full width view — pinch or scroll to pan</div>
+  <button class="fw-fab" id="fwToggleBtn" type="button">
+    <span class="fw-ic" id="fwIcon">⛶</span><span id="fwLabel">Full Width</span>
+  </button>
   <div class="dash-head">
     <div>
       <h1 id="dashTitle">Applicants</h1>
       <div class="sub" id="lastUpdated"></div>
     </div>
-    <button class="logout-btn" id="logoutBtn">Log Out</button>
+    <div class="dash-head-actions">
+      <button class="logout-btn" id="logoutBtn">Log Out</button>
+    </div>
   </div>
 
   <div class="tabs">
@@ -371,6 +448,7 @@
     <button class="tab-btn" id="tabDues" style="display:none;">Dues</button>
     <button class="tab-btn" id="tabFinance" style="display:none;">Collections</button>
     <button class="tab-btn" id="tabModmins" style="display:none;">Modmins</button>
+    <button class="tab-btn" id="tabPerformance" style="display:none;">Performance</button>
   </div>
 
   <div id="applicantsPanel">
@@ -440,7 +518,7 @@
             <th>#</th><th>Code</th><th>Location</th><th>Zone</th><th>Gender</th><th>Religion</th>
             <th>University</th><th>Year</th><th>Local</th><th>Salary</th><th>Subjects</th>
             <th>Class</th><th>Group</th><th>Department</th>
-            <th class="guardian-col">Guardian #</th><th>Days</th><th>Time</th><th>Medium</th><th>Status</th><th>Shared With</th><th>Actions</th>
+            <th class="guardian-col">Guardian #</th><th>Days</th><th>Time</th><th>Medium</th><th>Status</th><th>Assigned To</th><th>Shared With</th><th>Actions</th>
           </tr>
         </thead>
         <tbody id="tuitionsBody"></tbody>
@@ -599,6 +677,7 @@
 
     <div class="toolbar">
       <button id="mRefreshBtn">Refresh</button>
+      <button id="mPerformanceBtn">📊 Performance</button>
       <button class="post-btn" id="mAddBtn">+ Add Mod</button>
     </div>
 
@@ -615,6 +694,28 @@
       </table>
       <div class="loading-state" id="mLoadingState">Loading...</div>
       <div class="empty-state" id="mEmptyState" style="display:none;">No moderator accounts yet.</div>
+    </div>
+  </div>
+
+  <div id="performancePanel" style="display:none;">
+    <div class="toolbar">
+      <button id="pRefreshBtn">Refresh</button>
+      <button id="pBackBtn">← Back to Modmins</button>
+    </div>
+    <div class="form-err" id="performanceErr"></div>
+    <div class="table-wrap">
+      <table id="performanceTable" class="perf-table" hidden>
+        <thead>
+          <tr>
+            <th>Employee</th><th>Role</th><th>Guardian # Seen</th><th>Tuitions Assigned</th>
+            <th>Total Salary</th><th>Total Collected</th><th>Collected %</th>
+            <th>Finished</th><th>Not Finished</th><th>Finished %</th><th>Not Finished %</th>
+          </tr>
+        </thead>
+        <tbody id="performanceBody"></tbody>
+      </table>
+      <div class="loading-state" id="pLoadingState">Loading...</div>
+      <div class="empty-state" id="pEmptyState" style="display:none;">No performance data yet.</div>
     </div>
   </div>
 </div>
@@ -725,9 +826,12 @@ const ROLE_LABELS = {
   relation_officer: 'Relation Officer',
   privacy_officer: 'Privacy Officer'
 };
-// Tuition Officer: posts tuitions, sees only the ones he posted. Guardian number is masked
-//   behind a "See Guardian Number" button; clicking it reveals the number and records/shows
-//   who revealed it ("Seen by <username>"). No Applicants tab, no Son of Anton.
+// Tuition Officer / Moderator: guardian number is masked behind a "See Guardian Number"
+//   button; clicking it reveals the number and records/shows who revealed it ("Seen by
+//   <username>"), and auto-assigns that tuition to them via "Assigned To". If the tuition
+//   is already Assigned To someone else, the button is replaced with a lock message and
+//   the number can't be revealed. Admin always sees the number directly, no lock, and can
+//   Assign/Un-assign any employee (including multiple at once) from the "Assigned To" column.
 // Relation Officer: full access to Applicants + Tuitions + Son of Anton, but never sees the
 //   guardian number — the Guardian # column is not rendered for this role at all. Can no
 //   longer edit/delete tuitions. Instead he can "Ask for Access" for a tutor who applied.
@@ -753,10 +857,16 @@ function canEditDeleteTuition(role){
 function canSeeGuardianColumn(role){
   return role === 'admin' || role === 'moderator' || role === 'tuition_officer';
 }
-// Tuition Officer sees the column, but the number itself stays masked behind a
-// reveal button until clicked (and clicking it is logged/shown as "Seen by <username>").
+// Tuition Officer and Moderator see the column, but the number itself stays masked
+// behind a reveal button until clicked (logged/shown as "Seen by <username>"), and
+// gated by the tuition's "Assigned To" — only an assigned employee can reveal it.
+// Admin always sees the number directly, with no lock.
 function guardianNumberIsMasked(role){
-  return role === 'tuition_officer';
+  return role === 'tuition_officer' || role === 'moderator';
+}
+// Roles that participate in the "Assigned To" self-assign / lock system at all.
+function canBeAssignedToTuition(role){
+  return role === 'moderator' || role === 'tuition_officer' || role === 'relation_officer' || role === 'privacy_officer';
 }
 function canBanTutor(role){
   return role === 'admin' || role === 'moderator' || role === 'relation_officer';
@@ -779,11 +889,13 @@ const tabTuitions = document.getElementById('tabTuitions');
 const tabDues = document.getElementById('tabDues');
 const tabFinance = document.getElementById('tabFinance');
 const tabModmins = document.getElementById('tabModmins');
+const tabPerformance = document.getElementById('tabPerformance');
 const applicantsPanel = document.getElementById('applicantsPanel');
 const tuitionsPanel = document.getElementById('tuitionsPanel');
 const duesPanel = document.getElementById('duesPanel');
 const financePanel = document.getElementById('financePanel');
 const modminsPanel = document.getElementById('modminsPanel');
+const performancePanel = document.getElementById('performancePanel');
 const dashTitle = document.getElementById('dashTitle');
 let duesLoadedOnce = false;
 let financeLoadedOnce = false;
@@ -846,6 +958,7 @@ function showDashboard(){
   dashboard.style.display = 'block';
   const role = currentAdmin ? currentAdmin.role : null;
   tabModmins.style.display = role === 'admin' ? '' : 'none';
+  tabPerformance.style.display = 'none';
   tabApplicants.style.display = canSeeApplicants(role) ? '' : 'none';
   tabDues.style.display = canSeeDuesTab(role) ? '' : 'none';
   tabFinance.style.display = canManageFinance(role) ? '' : 'none';
@@ -1572,8 +1685,8 @@ document.getElementById('exportBtn').addEventListener('click', () => {
 /* ============================ TAB SWITCHING =========================== */
 /* ===================================================================== */
 function setActiveTab(tab){
-  [tabApplicants, tabTuitions, tabDues, tabFinance, tabModmins].forEach(b => b.classList.remove('active'));
-  [applicantsPanel, tuitionsPanel, duesPanel, financePanel, modminsPanel].forEach(p => p.style.display = 'none');
+  [tabApplicants, tabTuitions, tabDues, tabFinance, tabModmins, tabPerformance].forEach(b => b.classList.remove('active'));
+  [applicantsPanel, tuitionsPanel, duesPanel, financePanel, modminsPanel, performancePanel].forEach(p => p.style.display = 'none');
   tab.classList.add('active');
 }
 
@@ -1610,6 +1723,16 @@ tabModmins.addEventListener('click', () => {
   dashTitle.textContent = 'Modmins';
   loadModmins();
 });
+tabPerformance.addEventListener('click', () => {
+  if(!currentAdmin || currentAdmin.role !== 'admin') return;
+  setActiveTab(tabPerformance);
+  performancePanel.style.display = 'block';
+  dashTitle.textContent = 'Performance';
+  loadPerformance();
+});
+document.getElementById('mPerformanceBtn').addEventListener('click', () => tabPerformance.click());
+document.getElementById('pBackBtn').addEventListener('click', () => tabModmins.click());
+document.getElementById('pRefreshBtn').addEventListener('click', loadPerformance);
 
 /* ===================================================================== */
 /* ============================== TUITIONS =============================== */
@@ -1770,6 +1893,25 @@ async function loadAssignedTutorNames(){
   }catch(err){ console.error(err); }
 }
 
+// tuition id -> array of { employee_username, assigned_by, assigned_at }, for the
+// "Assigned To" column and for gating guardian-number reveals to whoever (if
+// anyone) holds the tuition.
+let tuitionAssignmentsByTuitionId = {};
+
+async function loadTuitionAssignments(){
+  try{
+    const { data, error } = await sb.rpc('admin_get_tuition_assignments', {
+      p_admin_username: currentAdmin.username,
+      p_admin_password_hash: currentAdmin.password_hash
+    });
+    if(error) throw error;
+    tuitionAssignmentsByTuitionId = {};
+    (data || []).forEach(function(a){
+      (tuitionAssignmentsByTuitionId[a.tuition_id] = tuitionAssignmentsByTuitionId[a.tuition_id] || []).push(a);
+    });
+  }catch(err){ console.error(err); }
+}
+
 async function loadTuitions(){
   document.getElementById('tLoadingState').style.display = 'block';
   document.getElementById('tLoadingState').textContent = 'Loading...';
@@ -1782,7 +1924,8 @@ async function loadTuitions(){
     });
     if(error) throw error;
     allTuitions = data || [];
-    await loadAssignedTutorNames();
+    await Promise.all([loadAssignedTutorNames(), loadTuitionAssignments()]);
+    if(currentAdmin.role === 'admin' && !allModmins.length){ await loadModmins(); }
     applyTuitionFilters();
   }catch(err){
     document.getElementById('tLoadingState').textContent = 'Failed to load tuitions.';
@@ -1825,6 +1968,7 @@ function renderTuitions(rows){
   tbody.querySelectorAll('[data-reveal]').forEach(btn => {
     btn.addEventListener('click', () => revealGuardianNumber(Number(btn.dataset.reveal)));
   });
+  wireAssignButtons();
   applyGuardianColumnVisibility();
 }
 
@@ -1927,9 +2071,129 @@ async function revealGuardianNumber(tuitionId){
       row.guardian_seen_by = currentAdmin.username;
       row.guardian_seen_at = seenAt;
     }
+    // Revealing also auto-assigns the caller, so reflect that locally too.
+    const existing = tuitionAssignmentsByTuitionId[tuitionId] || [];
+    if(!existing.some(function(a){ return a.employee_username === currentAdmin.username; })){
+      existing.push({ employee_username: currentAdmin.username, assigned_by: currentAdmin.username, assigned_at: seenAt });
+      tuitionAssignmentsByTuitionId[tuitionId] = existing;
+    }
     applyTuitionFilters();
   }catch(err){
     alert('Failed to reveal guardian number. ' + (err.message || ''));
+    console.error(err);
+  }
+}
+
+/* =====================================================================
+   ASSIGNED TO — which employee(s) own a tuition. A non-admin employee can
+   only assign himself (and only while nobody else has claimed it); an
+   admin can assign or remove any employee, including multiple at once.
+   ===================================================================== */
+function assignedToCellHTML(t){
+  const role = currentAdmin ? currentAdmin.role : null;
+  if(!currentAdmin) return '';
+  const assignees = tuitionAssignmentsByTuitionId[t.id] || [];
+
+  const pills = assignees.map(function(a){
+    const mine = a.employee_username === currentAdmin.username;
+    const removeBtn = role === 'admin'
+      ? ' <span class="x" data-unassign="' + t.id + '" data-unassign-user="' + escapeHtml(a.employee_username) + '" title="Remove">\u2715</span>'
+      : '';
+    return '<span class="assign-emp-pill' + (mine ? '' : ' locked') + '">' + escapeHtml(a.employee_username) + removeBtn + '</span>';
+  }).join('');
+
+  let controls = '';
+  if(role === 'admin'){
+    const takenUsernames = assignees.map(function(a){ return a.employee_username; });
+    const options = allModmins
+      .filter(function(m){ return m.status === 'active' && takenUsernames.indexOf(m.username) === -1; })
+      .map(function(m){ return '<option value="' + escapeHtml(m.username) + '">' + escapeHtml(m.username) + '</option>'; })
+      .join('');
+    controls = '<div class="assign-row">'
+      + '<select data-assign-select="' + t.id + '"><option value="">— employee —</option>' + options + '</select>'
+      + '<button type="button" data-assign-add="' + t.id + '">Assign</button>'
+      + '</div>';
+  } else if(canBeAssignedToTuition(role)){
+    const alreadyAssignedToMe = assignees.some(function(a){ return a.employee_username === currentAdmin.username; });
+    const assignedToOther = assignees.length && !alreadyAssignedToMe;
+    if(!alreadyAssignedToMe && !assignedToOther){
+      controls = '<div class="assign-row"><button type="button" data-assign-self="' + t.id + '">Assign to me</button></div>';
+    }
+  }
+
+  return '<div class="assign-wrap">' + (pills || '<span style="color:var(--ink-soft);font-size:12px;">— unassigned —</span>') + controls + '</div>';
+}
+
+function wireAssignButtons(){
+  document.querySelectorAll('[data-assign-self]').forEach(function(btn){
+    btn.addEventListener('click', function(){ selfAssignTuition(Number(btn.dataset.assignSelf)); });
+  });
+  document.querySelectorAll('[data-assign-add]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const tuitionId = Number(btn.dataset.assignAdd);
+      const select = document.querySelector('[data-assign-select="' + tuitionId + '"]');
+      const username = select ? select.value : '';
+      if(!username) return;
+      adminAssignEmployee(tuitionId, username);
+    });
+  });
+  document.querySelectorAll('[data-unassign]').forEach(function(el){
+    el.addEventListener('click', function(){
+      adminUnassignEmployee(Number(el.dataset.unassign), el.dataset.unassignUser);
+    });
+  });
+}
+
+async function selfAssignTuition(tuitionId){
+  if(!currentAdmin) return;
+  try{
+    const { error } = await sb.rpc('officer_self_assign_tuition', {
+      p_admin_username: currentAdmin.username,
+      p_admin_password_hash: currentAdmin.password_hash,
+      p_tuition_id: tuitionId
+    });
+    if(error) throw error;
+    await loadTuitionAssignments();
+    applyTuitionFilters();
+  }catch(err){
+    alert('Failed to assign. ' + (err.message || ''));
+    console.error(err);
+  }
+}
+
+async function adminAssignEmployee(tuitionId, username){
+  if(!currentAdmin || currentAdmin.role !== 'admin') return;
+  try{
+    const { error } = await sb.rpc('admin_assign_tuition_employee', {
+      p_admin_username: currentAdmin.username,
+      p_admin_password_hash: currentAdmin.password_hash,
+      p_tuition_id: tuitionId,
+      p_target_username: username
+    });
+    if(error) throw error;
+    await loadTuitionAssignments();
+    applyTuitionFilters();
+  }catch(err){
+    alert('Failed to assign employee. ' + (err.message || ''));
+    console.error(err);
+  }
+}
+
+async function adminUnassignEmployee(tuitionId, username){
+  if(!currentAdmin || currentAdmin.role !== 'admin') return;
+  if(!confirm('Remove ' + username + ' from this tuition?')) return;
+  try{
+    const { error } = await sb.rpc('admin_unassign_tuition_employee', {
+      p_admin_username: currentAdmin.username,
+      p_admin_password_hash: currentAdmin.password_hash,
+      p_tuition_id: tuitionId,
+      p_target_username: username
+    });
+    if(error) throw error;
+    await loadTuitionAssignments();
+    await loadTuitions();
+  }catch(err){
+    alert('Failed to unassign employee. ' + (err.message || ''));
     console.error(err);
   }
 }
@@ -1949,11 +2213,18 @@ function guardianNumberCellHTML(t){
         + '<br><span style="color:var(--ink-soft);font-size:12px;">Seen by ' + escapeHtml(currentAdmin.username)
         + (seenAt ? ' \u00b7 ' + new Date(seenAt).toLocaleString('en-GB') : '') + '</span>';
     }
-    // Someone else (another Tuition Officer) already revealed this one —
-    // show who, but don't offer a reveal button. The RPC would reject a
-    // second reveal anyway; this just avoids a pointless click + error.
+    // Someone else already revealed this one — show who, but don't offer a
+    // reveal button. The RPC would reject a second reveal anyway; this just
+    // avoids a pointless click + error.
     if(t.guardian_seen_by){
       return '<span style="color:var(--ink-soft);font-size:13px;">\uD83D\uDD12 Seen by ' + escapeHtml(t.guardian_seen_by) + '</span>';
+    }
+    // Tuition is assigned to someone else (but they haven't revealed it yet):
+    // locked, no reveal button offered — only the assigned employee(s) can.
+    const assignees = tuitionAssignmentsByTuitionId[t.id] || [];
+    const isAssignedToMe = currentAdmin && assignees.some(function(a){ return a.employee_username === currentAdmin.username; });
+    if(assignees.length && !isAssignedToMe){
+      return '<span style="color:var(--ink-soft);font-size:13px;">\uD83D\uDD12 Assigned to ' + escapeHtml(assignees.map(function(a){return a.employee_username;}).join(', ')) + '</span>';
     }
     return '<button type="button" class="icon-btn" data-reveal="' + t.id + '">\uD83D\uDD12 See Guardian Number</button>';
   }
@@ -2003,6 +2274,7 @@ function tuitionRowHTML(t){
     + '<td>' + escapeHtml(t.time_slot||'') + '</td>'
     + '<td>' + escapeHtml(TUITION_LABELS.medium[t.medium]||t.medium||'') + '</td>'
     + '<td><span class="pill ' + t.status + '">' + escapeHtml(TUITION_LABELS.status[t.status]||t.status) + '</span></td>'
+    + '<td>' + assignedToCellHTML(t) + '</td>'
     + '<td>' + sharedWithCellHTML(t) + '</td>'
     + '<td><div class="row-actions">' + actionButtons + '</div></td>'
     + '</tr>';
@@ -3405,6 +3677,96 @@ document.getElementById('modminFormSave').addEventListener('click', async functi
     saveBtn.disabled = false;
   }
 });
+
+/* =====================================================================
+   PERFORMANCE — per-employee stats: guardian numbers seen, tuitions
+   assigned, salary/collection totals, and finished vs. not-finished
+   rates. Admin-only, driven entirely by admin_get_employee_performance.
+   ===================================================================== */
+async function loadPerformance(){
+  if(!currentAdmin) return;
+  const errEl = document.getElementById('performanceErr');
+  const table = document.getElementById('performanceTable');
+  const loadingEl = document.getElementById('pLoadingState');
+  const emptyEl = document.getElementById('pEmptyState');
+  errEl.textContent = '';
+  table.hidden = true;
+  emptyEl.style.display = 'none';
+  loadingEl.style.display = 'block';
+  try{
+    const { data, error } = await sb.rpc('admin_get_employee_performance', {
+      p_admin_username: currentAdmin.username,
+      p_admin_password_hash: currentAdmin.password_hash
+    });
+    if(error) throw error;
+    renderPerformance(data || []);
+  }catch(err){
+    console.error(err);
+    errEl.textContent = 'Failed to load performance data. ' + (err.message || '');
+  }finally{
+    loadingEl.style.display = 'none';
+  }
+}
+
+function renderPerformance(rows){
+  const table = document.getElementById('performanceTable');
+  const body = document.getElementById('performanceBody');
+  const emptyEl = document.getElementById('pEmptyState');
+  if(!rows.length){
+    table.hidden = true;
+    emptyEl.style.display = 'block';
+    return;
+  }
+  emptyEl.style.display = 'none';
+  table.hidden = false;
+  body.innerHTML = rows.map(function(r){
+    return '<tr>'
+      + '<td><b>' + escapeHtml(r.username) + '</b></td>'
+      + '<td>' + escapeHtml(ROLE_LABELS[r.role] || r.role) + '</td>'
+      + '<td>' + (r.guardian_numbers_seen||0) + '</td>'
+      + '<td>' + (r.tuitions_assigned||0) + '</td>'
+      + '<td>' + moneyFmt(r.salary_total) + '</td>'
+      + '<td>' + moneyFmt(r.collected_total) + '</td>'
+      + '<td>' + Number(r.collected_pct||0) + '%</td>'
+      + '<td>' + (r.finished_count||0) + '</td>'
+      + '<td>' + (r.not_finished_count||0) + '</td>'
+      + '<td>' + Number(r.finished_pct||0) + '%</td>'
+      + '<td>' + Number(r.not_finished_pct||0) + '%</td>'
+      + '</tr>';
+  }).join('');
+}
+
+/* ---- full width view toggle ---- */
+(function(){
+  const btn = document.getElementById('fwToggleBtn');
+  const icon = document.getElementById('fwIcon');
+  const label = document.getElementById('fwLabel');
+  const hint = document.getElementById('fwHint');
+  const meta = document.getElementById('viewportMeta');
+  const NORMAL_VIEWPORT = 'width=device-width, initial-scale=1.0';
+  const WIDE_VIEWPORT = 'width=1400';
+  let fwOn = localStorage.getItem('tm_admin_fw_view') === '1';
+
+  function applyState(showHint){
+    document.body.classList.toggle('fw-view', fwOn);
+    meta.setAttribute('content', fwOn ? WIDE_VIEWPORT : NORMAL_VIEWPORT);
+    btn.classList.toggle('active', fwOn);
+    icon.textContent = fwOn ? '↩' : '⛶';
+    label.textContent = fwOn ? 'Fit to Screen' : 'Full Width';
+    if(showHint && fwOn){
+      hint.classList.add('show');
+      setTimeout(()=>hint.classList.remove('show'), 2200);
+    }
+  }
+
+  btn.addEventListener('click', () => {
+    fwOn = !fwOn;
+    localStorage.setItem('tm_admin_fw_view', fwOn ? '1' : '0');
+    applyState(true);
+  });
+
+  applyState(false);
+})();
 </script>
 
 </body>
